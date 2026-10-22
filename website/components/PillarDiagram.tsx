@@ -80,12 +80,16 @@ export default function PillarDiagram() {
               {n.id}
             </text>
             <text
-              x={n.id === 'F' ? n.x + R + 10 : n.x}
-              y={n.id === 'W' ? n.y + R + 20 : n.id === 'F' ? n.y + 5 : n.y - R - 10}
+              x={n.id === 'F' ? n.x + R + 6 : n.x}
+              y={n.id === 'W' ? n.y + R + 20 : n.id === 'F' ? n.y + 24 : n.y - R - 10}
               textAnchor={n.id === 'F' ? 'start' : 'middle'}
               fontSize="19"
               fontFamily="Inter, sans-serif"
               fill="currentColor"
+              stroke="#0b0a0e"
+              strokeWidth="6"
+              strokeLinejoin="round"
+              paintOrder="stroke"
             >
               {n.label}
             </text>

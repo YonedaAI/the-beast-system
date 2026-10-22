@@ -9,7 +9,7 @@ const description =
 export const metadata: Metadata = {
   description,
   openGraph: {
-    title: 'The Six Pillars of the Beast System',
+    title: 'The Formalized State: The Six Pillars of the Beast System',
     description,
     url: '/',
     images: [{ url: '/og/og-image.png', width: 1200, height: 630 }],
@@ -29,8 +29,9 @@ export default function Home() {
           <div>
             <div className="eyebrow">A seven-part research series</div>
             <h1>
-              The Six Pillars of the <em>Beast System</em>
+              The <em>Formalized</em> State
             </h1>
+            <p className="hero-series">The Six Pillars of the Beast System</p>
             <p className="lede">
               {'The six-pillar framework identifies an invariant structure of human governance, supported by historical observation and given precise expression through mathematics.'}
             </p>

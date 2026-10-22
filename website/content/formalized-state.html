@@ -808,7 +808,114 @@
 <p>The six-pillar framework identifies an invariant structure of human governance, supported by historical observation and given precise expression through mathematics. Relative to six axioms about collective life, four incidence axioms and a stated set of preserved properties, the Formalized State has four properties. It represents every governance system that satisfies the axioms, preserving roles, control shares, concentration, contestability, integration and dependencies and forgetting content, ideology and procedure. Its components are necessary, because the axioms force each function and each dependency and each axiom can fail in a persistent model. It is minimal, because every way of dropping or merging pillars confuses two systems with different preserved properties. And it is unique, as the coarsest abstraction that preserves those properties, up to a unique isomorphism, with exactly six dimensions. Encodings of seven classical frameworks each confuse a pair of systems that it distinguishes.</p>
 <p>Capture belongs to instances. Structures that satisfy every axiom occupy every corner of the concentration and integration square, so the existence of the structure settles nothing about its capture, and the conversion model shows how replacement and contestability decide whether a coalition’s foothold dies out. The open questions are empirical: whether every functioning collective satisfies the axioms, which has been tested against the ethnographic and historical record only qualitatively; and the quantitative scoring of real polities on indices whose ranges are proved here. The series calls the abstraction the Hierarchy of the Beast System. The structure is universal, its capture is contingent, and the difference between them is a matter of measurement.</p>
 <h2 data-number="14" id="app:code"><span class="header-section-number">14</span> Code evidence</h2>
-<p>The reference implementation is the Python package <code>beast_system</code> in the directory <code>model/</code> of the project, with its tests in <code>model/tests/</code>. It encodes the formal objects of this paper and checks the results that admit a computational check on coded fixtures.</p>
+<p>The reference implementation is the Python package <code>beast_system</code> in the directory <code>model/</code> of the project, with its tests in <code>model/tests/</code>; the suite of 335 tests passes. The code encodes the formal objects of this paper and checks, on coded fixtures, the results that admit a computational check. A passing test is evidence that the encoding agrees with the stated result on the fixtures it covers, not a proof; the proofs are in the text. The codings of the hard cases, including the incidence axioms, are qualitative readings of the sources cited in Section <a class="xref" href="#sec:necessity">4</a>, recorded with those sources in the code. Table <a class="xref" href="#tab:code">7</a> maps each result to the functions that encode it and the tests that check it. Function names refer to modules of <code>beast_system</code>, and test names to files in <code>model/tests/</code>. Results proved only in the text, such as Lemmas <a class="xref" href="#lem:formalized-state:forcing">4.1</a> and <a class="xref" href="#lem:formalized-state:pillars">4.2</a>, Corollary <a class="xref" href="#cor:formalized-state:michels">8.6</a> and Proposition <a class="xref" href="#prop:formalized-state:perron">8.7</a>, are not listed.</p>
+<div class="table-scroll" role="region" aria-label="Table 7" tabindex="0"><table id="tab:code">
+<caption><span class="cap-label">Table 7.</span> Results of this paper, the code that encodes them, and the tests that check them on fixtures.</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Result</th>
+<th style="text-align: left;">What the code checks</th>
+<th style="text-align: left;">Functions and tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Result</td>
+<td style="text-align: left;">What the code checks</td>
+<td style="text-align: left;">Functions and tests</td>
+</tr>
+<tr>
+<td style="text-align: left;">Definition <a class="xref" href="#def:formalized-state:implementation">2.2</a>, Theorem <a class="xref" href="#thm:formalized-state:A">4.3</a>, Corollary <a class="xref" href="#cor:formalized-state:struct">5.5</a></td>
+<td style="text-align: left;">Every hard-case and baseline fixture that satisfies the axioms realizes all six functions with the relations <span class="math inline">\(\mathcal{D}_0\)</span> present, and none is a counterexample.</td>
+<td style="text-align: left;"><code>necessity.check_proposition_a</code>; <code>test_necessity</code>: <code>test_theorem_a_on_hard_cases</code>, <code>test_baseline_model_is_consistent</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Proposition <a class="xref" href="#prop:formalized-state:independence">4.4</a></td>
+<td style="text-align: left;">The model of part (a) has <span class="math inline">\(\mathsf{Struct}\)</span>; each of the six independence fixtures persists, violates exactly its axiom and lacks exactly its function, including the repaired model for Ax4<span class="math inline">\(^{*}\)</span>.</td>
+<td style="text-align: left;"><code>necessity.PROP_4_4A_MODEL</code>, <code>AXIOM_INDEPENDENCE</code>, <code>R1_AX4_MODEL</code>; <code>test_necessity</code>: <code>test_prop_4_4a_model_and_variant</code>, <code>test_axiom_independence_fixtures</code>, <code>test_r1_independence_model_for_ax4</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Lemma <a class="xref" href="#lem:formalized-state:D0">5.4</a></td>
+<td style="text-align: left;">The hyperarc <span class="math inline">\((\{\mathsf{I},\mathsf{C}\},\mathsf{J})\)</span> is generated, and in the variant with a fine on defiance neither <span class="math inline">\(\mathsf{I}\to\mathsf{J}\)</span> nor <span class="math inline">\(\mathsf{C}\to\mathsf{J}\)</span> is.</td>
+<td style="text-align: left;"><code>necessity.generate_dependencies</code>, <code>PROP_4_4A_VARIANT</code>; <code>test_necessity</code>: <code>test_prop_4_4a_model_and_variant</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Theorem <a class="xref" href="#thm:formalized-state:interdependence">5.10</a></td>
+<td style="text-align: left;">The arcs of <span class="math inline">\(\mathcal{D}^{*}\)</span> are generated from the axiom encodings; <span class="math inline">\(\mathcal{D}^{*}\)</span> is strongly connected, and the cascade of every single function is all six; every hard-case fixture with the full axiom set and all six coded practices is interdependent.</td>
+<td style="text-align: left;"><code>necessity.D_STAR_KEYS</code>, <code>generate_dependencies</code>, <code>is_strongly_connected</code>, <code>cascade_closure</code>; <code>test_necessity</code>: <code>test_d_star_is_strongly_connected_and_cascade_complete</code>, <code>test_interdependence_holds_for_every_axiom_built_fixture</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Proposition <a class="xref" href="#prop:formalized-state:minimality">5.11</a></td>
+<td style="text-align: left;">The six axioms without X1 to X5 give <span class="math inline">\(\mathsf{Struct}\)</span> but not interdependence; without X1 no arc enters <span class="math inline">\(\mathsf{W}\)</span>; without X2 <span class="math inline">\(\mathsf{P}\)</span> has no outgoing arc; without X5 the structure is strongly connected and <span class="math inline">\(\operatorname{cl}(\{\mathsf{C}\})=\{\mathsf{C}\}\)</span>, while splitting the hyperarc puts <span class="math inline">\(\mathsf{J}\)</span> in that cascade; precedent can replace X3.</td>
+<td style="text-align: left;"><code>test_necessity</code>: <code>test_d0_axioms_without_x_give_struct_but_not_interdependence</code>, <code>test_without_x1_no_arc_into_w</code>, <code>test_without_x2_p_has_no_out_arc</code>, <code>test_without_x5_strongly_connected_but_c_isolated</code>, <code>test_replacing_x3_by_precedent_keeps_strong_connectivity</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Definition <a class="xref" href="#def:formalized-state:overlap">6.1</a></td>
+<td style="text-align: left;">The overlap measure is computed for general, non-additive coalition shares.</td>
+<td style="text-align: left;"><code>indices.coalition_overlap</code>; <code>test_indices</code>: <code>test_coalition_overlap_general_kappa</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Lemma <a class="xref" href="#lem:formalized-state:hub">6.2</a></td>
+<td style="text-align: left;"><span class="math inline">\(\mathcal{I}\)</span> equals the sum of degrees over thirty; the hub-set bounds for <span class="math inline">\(k=1,2,3\)</span> (<span class="math inline">\(1/3\)</span>, <span class="math inline">\(0.6\)</span> and <span class="math inline">\(0.8\)</span>) hold and are attained; the clique bound and the pure-star bound hold on test matrices.</td>
+<td style="text-align: left;"><code>indices.integration_degrees</code>, <code>hub_bound</code>, <code>clique_lower_bound</code>, <code>star_upper_bound</code>; <code>test_indices</code>: <code>test_degree_decomposition_of_integration</code>, <code>test_hub_bound_values_and_validity</code>, <code>test_clique_lower_bound</code>, <code>test_star_upper_bound</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Definition <a class="xref" href="#def:formalized-state:cap">6.3</a>, Lemma <a class="xref" href="#lem:formalized-state:U">6.4</a></td>
+<td style="text-align: left;">Each of the three conditions of a capture link is necessary; <span class="math inline">\(U\)</span> lies in <span class="math inline">\([0,1]\)</span> and, for any weights, between the smallest and largest pillar terms.</td>
+<td style="text-align: left;"><code>capture.proposition_b</code>, <code>indices.unaccountable_concentration</code>, <code>weight_sensitivity</code>; <code>test_capture</code>: <code>test_each_capture_condition_is_necessary</code>; <code>test_indices</code>: <code>test_u_bounds_random</code>, <code>test_weight_sensitivity_within_vertex_bounds</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Lemma <a class="xref" href="#lem:formalized-state:separation">6.5</a></td>
+<td style="text-align: left;">The admissibility check returns true for the hard cases and the four corner assignments when every coded holder is supplied as a member; these fixtures do not exercise the clause on parties to a dispute.</td>
+<td style="text-align: left;"><code>necessity.is_admissible</code>; <code>test_necessity</code>: <code>test_admissibility</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Theorem <a class="xref" href="#thm:formalized-state:nonimplication">6.6</a></td>
+<td style="text-align: left;">Four polities satisfying every axiom attain <span class="math inline">\((U,\mathcal{I})\)</span> equal to <span class="math inline">\((0,0)\)</span>, <span class="math inline">\((0,1)\)</span>, <span class="math inline">\((1,0)\)</span> and <span class="math inline">\((1,1)\)</span>, all interdependent, and only <span class="math inline">\((1,1)\)</span> has a capture link; the counter-model holds for several threshold pairs.</td>
+<td style="text-align: left;"><code>capture.corner_polities</code>, <code>a_does_not_imply_b</code>; <code>test_capture</code>: <code>test_corner_polities_attain_the_four_corners</code>, <code>test_counter_model_robust_to_thresholds</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Definitions <a class="xref" href="#def:formalized-state:F">7.1</a> and <a class="xref" href="#def:formalized-state:profile">7.2</a>, Theorem <a class="xref" href="#thm:formalized-state:representation">7.4</a></td>
+<td style="text-align: left;">A coded record is representable exactly when Proposition A holds for it, on the fixtures and on random well-formed records; independence models fail (F1), and the baseline without X1 to X5 fails only (F4).</td>
+<td style="text-align: left;"><code>representation.CodedRecord</code>, <code>represent</code>, <code>in_formalized_class</code>, <code>representable</code>; <code>test_representation</code>: <code>test_representable_iff_proposition_a</code>, <code>test_theorem_on_random_well_formed_records</code>, <code>test_independence_models_are_not_representable_empty_layer</code>, <code>test_baseline_without_x_fails_only_f4</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Lemma <a class="xref" href="#lem:formalized-state:preserved">7.3</a></td>
+<td style="text-align: left;">Representation preserves <span class="math inline">\(H\)</span>, <span class="math inline">\(U\)</span>, <span class="math inline">\(\mathcal{I}\)</span>, the capture predicate and interdependence; equivalence under an actor bijection preserves these and every coupling <span class="math inline">\(C^{\mathrm{ov}}_{mn}\)</span>.</td>
+<td style="text-align: left;"><code>representation.preserved_quantities</code>, <code>equivalent_A</code>; <code>test_representation</code>: <code>test_represent_preserves_quantities</code>, <code>test_equivalent_a_under_actor_bijection_preserves_quantities</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Proposition <a class="xref" href="#prop:formalized-state:minimality6">7.5</a></td>
+<td style="text-align: left;">Every drop and every merge of pillars, including the all-dropped map, identifies the two witnesses of the proposition while their preserved properties differ; drop witnesses keep both actors through a retained pillar.</td>
+<td style="text-align: left;"><code>uniqueness.coarsen</code>, <code>witness_coarsening</code>; <code>representation.drop</code>, <code>merge</code>; <code>test_uniqueness</code>: <code>test_every_drop_collapses_a_witness</code>, <code>test_every_merge_collapses_a_witness</code>, <code>test_all_dropped_coarsening_has_a_witness</code>, <code>test_drop_witness_keeps_b_as_actor_via_retained_pillar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Definition <a class="xref" href="#def:formalized-state:abstraction">7.6</a>, Theorem <a class="xref" href="#thm:formalized-state:uniqueness">7.7</a></td>
+<td style="text-align: left;">Two <span class="math inline">\(P\)</span>-preserving abstractions built differently factor through <span class="math inline">\(\Phi\)</span> by a well-defined map that is a bijection on the fixtures; the canonical form is a complete invariant for <span class="math inline">\(P\)</span>.</td>
+<td style="text-align: left;"><code>uniqueness.phi</code>, <code>canonical_form</code>, <code>factor_through_phi</code>; <code>test_uniqueness</code>: <code>test_p_preserving_abstractions_factor_through_phi</code>, <code>test_canonical_form_is_a_complete_invariant</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Theorem <a class="xref" href="#thm:formalized-state:six">7.8</a></td>
+<td style="text-align: left;">Bijective coarsenings are renamings that preserve the structure; each of the 202 partitions of the six pillars into fewer than six blocks collapses a witness pair.</td>
+<td style="text-align: left;"><code>uniqueness.coarsen</code>; <code>test_uniqueness</code>: <code>test_bijective_coarsenings_are_p_preserving</code>, <code>test_pigeonhole_every_partition_with_fewer_than_six_blocks</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Definition <a class="xref" href="#def:formalized-state:conversion">8.4</a>, Theorem <a class="xref" href="#thm:formalized-state:conversion">8.5</a></td>
+<td style="text-align: left;">Parts (a), (b), (c), (e) and (f), on the tested fixtures and samples: the map stays in the cube and below <span class="math inline">\(Ay\)</span> on 300 samples; one <span class="math inline">\(\rho(A)&lt;1\)</span> path decays below <span class="math inline">\(10^{-6}\)</span>; the fully contestable pillar obeys its geometric bound and integration cap; <span class="math inline">\(\rho(A)\)</span> is nonincreasing on each tested grid of <span class="math inline">\(Q_n\)</span>; and the foothold bound holds for 500 steps.</td>
+<td style="text-align: left;"><code>dynamics.conversion_step</code>, <code>comparison_matrix</code>, <code>foothold_bound</code>; <code>test_conversion</code>: <code>test_t_maps_cube_into_itself_and_is_dominated_by_a</code>, <code>test_rho_below_one_means_reversible</code>, <code>test_full_contestability_drains_pillar_and_caps_integration</code>, <code>test_rho_nonincreasing_in_each_q</code>, <code>test_foothold_never_vanishes</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Remark <a class="xref" href="#rem:formalized-state:sign">8.8</a></td>
+<td style="text-align: left;">A six-pillar pair of matrices with the same positive entries has spectral radii above and below one.</td>
+<td style="text-align: left;"><code>dynamics.negative_feedback_example</code>; <code>test_dynamics_regimes</code>: <code>test_positive_links_do_not_guarantee_persistence</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Proposition <a class="xref" href="#prop:formalized-state:witnesses">10.1</a>, Theorem <a class="xref" href="#thm:formalized-state:novelty">10.2</a></td>
+<td style="text-align: left;">For each of the seven encoded predecessors, the two witness systems have the same actors and the same encoding and different <span class="math inline">\(P\)</span>; the Weber label is not determined by <span class="math inline">\(P\)</span>.</td>
+<td style="text-align: left;"><code>uniqueness.encode_parsons</code> and the six other encodings, <code>witness_pair</code>; <code>test_uniqueness</code>: <code>test_predecessor_encoding_collapses_its_witness</code>, <code>test_weber_label_is_not_determined_by_p</code></td>
+</tr>
+</tbody>
+</table></div>
 
 <h2 id="references"><span class="header-section-number"></span>References</h2><div class="bibliography">
 

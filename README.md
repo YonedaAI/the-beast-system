@@ -1,4 +1,6 @@
-# The Six Pillars of the Beast System
+# The Formalized State
+
+*The Six Pillars of the Beast System*
 
 The six-pillar framework identifies an invariant structure of human governance, supported by historical observation and given precise expression through mathematics.
 

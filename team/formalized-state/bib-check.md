@@ -4,9 +4,9 @@ Checked 59 identifiers. OK 56, OK-PRIOR 3 (openlibrary.org outage at gate time)
 
 | key | kind | id | status | note |
 |---|---|---|---|---|
-| almond1966 | url | https://openlibrary.org/works/OL2693586W | OK-PRIOR | openlibrary.org down at gate time (HTTP 000 incl. home page, 19:12Z); entry verified on Open Library earlier in session by the paper author |
-| aristotle1996 | url | https://openlibrary.org/works/OL14998298W | OK-PRIOR | openlibrary.org down at gate time (HTTP 000 incl. home page, 19:12Z); entry verified on Open Library earlier in session by the paper author |
-| luhmann1995 | url | https://openlibrary.org/works/OL1652158W | OK-PRIOR | openlibrary.org down at gate time (HTTP 000 incl. home page, 19:12Z); entry verified on Open Library earlier in session by the paper author |
+| almond1966 | url | https://openlibrary.org/works/OL2693586W | OK-PRIOR | openlibrary.org down at gate time (HTTP 000 incl. home page); verified on Open Library earlier in session by the paper author |
+| aristotle1996 | url | https://openlibrary.org/works/OL14998298W | OK-PRIOR | openlibrary.org down at gate time (HTTP 000 incl. home page); verified on Open Library earlier in session by the paper author |
+| luhmann1995 | url | https://openlibrary.org/works/OL1652158W | OK-PRIOR | openlibrary.org down at gate time (HTTP 000 incl. home page); verified on Open Library earlier in session by the paper author |
 | aberle1950 | doi | 10.1086/290705 | OK | crossref title: The Functional Prerequisites of a Society (match 1.00) |
 | acemoglu2006 | doi | 10.1017/CBO9780511510809 | OK | crossref title: Economic Origins of Dictatorship and Democracy (match 1.00) |
 | almond1960 | doi | 10.1515/9781400866977 | OK | crossref title: The Politics of the Developing Areas (match 1.00) |

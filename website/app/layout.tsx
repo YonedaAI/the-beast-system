@@ -3,7 +3,7 @@ import { Cormorant_Garamond, Inter } from 'next/font/google';
 import Link from 'next/link';
 import 'katex/dist/katex.min.css';
 import './globals.css';
-import { AUTHOR, CODE_URL, GITHUB, SITE_TITLE } from '@/lib/papers';
+import { AUTHOR, CODE_URL, GITHUB, SITE_SERIES, SITE_TITLE } from '@/lib/papers';
 
 const display = Cormorant_Garamond({ subsets: ['latin'], weight: ['500', '600', '700'], style: ['normal', 'italic'], variable: '--font-display', display: 'swap' });
 const body = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
@@ -14,17 +14,17 @@ const description =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: SITE_TITLE, template: `%s | ${SITE_TITLE}` },
+  title: { default: `${SITE_TITLE}: ${SITE_SERIES}`, template: `%s | ${SITE_TITLE}` },
   description,
   authors: [{ name: AUTHOR }],
   openGraph: {
     type: 'website',
     siteName: SITE_TITLE,
-    title: SITE_TITLE,
+    title: `${SITE_TITLE}: ${SITE_SERIES}`,
     description,
     images: [{ url: '/og/og-image.png', width: 1200, height: 630 }],
   },
-  twitter: { card: 'summary_large_image', title: SITE_TITLE, description, images: ['/og/og-image.png'] },
+  twitter: { card: 'summary_large_image', title: `${SITE_TITLE}: ${SITE_SERIES}`, description, images: ['/og/og-image.png'] },
 };
 
 export const viewport: Viewport = { themeColor: '#0b0a0e' };
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site-header">
           <div className="site-header-inner">
             <Link href="/" className="site-title">
-              The Six Pillars of the <span>Beast System</span>
+              The <span>Formalized</span> State
             </Link>
             <nav className="site-nav" aria-label="Main">
               <Link href="/#papers">Papers</Link>

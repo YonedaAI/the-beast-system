@@ -24,7 +24,8 @@ export type Paper = {
 
 export const papers = papersJson as Paper[];
 
-export const SITE_TITLE = 'The Six Pillars of the Beast System';
+export const SITE_TITLE = 'The Formalized State';
+export const SITE_SERIES = 'The Six Pillars of the Beast System';
 export const AUTHOR = 'Matthew Long';
 export const GITHUB = 'https://github.com/YonedaAI/the-beast-system';
 export const CODE_URL = `${GITHUB}/tree/main/model`;

@@ -1,0 +1,63 @@
+{
+  "financial-power": {
+    "blocks": 15,
+    "refs": 38,
+    "tables": 4,
+    "bibEntries": 139,
+    "crossPartLinks": 18,
+    "ofLinks": 7,
+    "rawLeftovers": 0
+  },
+  "political-power": {
+    "blocks": 22,
+    "refs": 82,
+    "tables": 5,
+    "bibEntries": 143,
+    "crossPartLinks": 22,
+    "rawLeftovers": 0
+  },
+  "judicial-power": {
+    "blocks": 19,
+    "refs": 61,
+    "tables": 4,
+    "bibEntries": 103,
+    "crossPartLinks": 16,
+    "rawLeftovers": 0
+  },
+  "ideological-power": {
+    "blocks": 22,
+    "refs": 61,
+    "tables": 4,
+    "bibEntries": 127,
+    "crossPartLinks": 31,
+    "ofLinks": 8,
+    "rawLeftovers": 0
+  },
+  "coercive-power": {
+    "blocks": 18,
+    "refs": 95,
+    "tables": 3,
+    "bibEntries": 128,
+    "crossPartLinks": 2,
+    "rawLeftovers": 0
+  },
+  "productive-power": {
+    "blocks": 27,
+    "refs": 104,
+    "tables": 6,
+    "figures": 1,
+    "bibEntries": 131,
+    "crossPartLinks": 17,
+    "rawLeftovers": 0
+  },
+  "formalized-state": {
+    "blocks": 46,
+    "refs": 156,
+    "tables": 6,
+    "figures": 1,
+    "bibEntries": 91,
+    "crossPartLinks": 107,
+    "ofLinks": 61,
+    "rawLeftovers": 0
+  }
+}

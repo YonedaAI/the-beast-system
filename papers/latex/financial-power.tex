@@ -1,0 +1,994 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\linespread{1.0}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.5em}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{booktabs,tabularx,array,longtable}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,frame=single,framesep=4pt,showstringspaces=false,captionpos=b}
+\usepackage[authoryear,round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\definecolor{grokgray}{RGB}{110,110,110}
+\AddToHook{shipout/background}{%
+  \ifnum\value{page}=1
+    \put(30pt,-0.5\paperheight){\makebox(0,0){\rotatebox{90}{\footnotesize\sffamily\color{grokgray}%
+      GrokRxiv:2026.10.financial-power\quad [\,econ.GN\,]\quad 22 Oct 2026}}}%
+  \fi
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\AddToHook{env/proposition/begin}{\crefalias{theorem}{proposition}}
+\AddToHook{env/lemma/begin}{\crefalias{theorem}{lemma}}
+\AddToHook{env/corollary/begin}{\crefalias{theorem}{corollary}}
+\AddToHook{env/definition/begin}{\crefalias{theorem}{definition}}
+\AddToHook{env/assumption/begin}{\crefalias{theorem}{assumption}}
+\AddToHook{env/example/begin}{\crefalias{theorem}{example}}
+\AddToHook{env/remark/begin}{\crefalias{theorem}{remark}}
+\crefname{assumption}{assumption}{assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+
+% Pillar labels (sans-serif, per the series notation) and shared objects
+\newcommand{\pF}{\mathsf{F}}
+\newcommand{\pP}{\mathsf{P}}
+\newcommand{\pJ}{\mathsf{J}}
+\newcommand{\pI}{\mathsf{I}}
+\newcommand{\pC}{\mathsf{C}}
+\newcommand{\pW}{\mathsf{W}}
+\newcommand{\Pillars}{\mathcal{M}}
+\newcommand{\Integ}{\mathcal{I}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+
+\title{Financial Power and Resource Command\\[4pt]
+  {\normalsize Part I of \emph{The Six Pillars of the Beast System}}}
+\author{Matthew Long\\
+  \small The YonedaAI Collaboration, YonedaAI Research Collective\\
+  \small Chicago, IL\\
+  \small \texttt{matthew@yonedaai.com} \quad \url{https://yonedaai.com}}
+\date{October 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Every governance system must settle conflicting claims on finite resources. This paper treats that settlement as the financial pillar of a six-function model of governance and asks who controls resources across regime types. From a scarcity axiom and an explicit assumption that unsettled conflicts carry a positive hazard of dissolution, we prove that a collective with no recognized allocation regularity cannot persist with probability bounded away from zero, and that in any collective that does persist the share of conflicts settled by such a regularity tends to one. The result concerns a function, not an institution: in foraging bands the regularity is a sharing norm, and control is dispersed close to the minimum concentration the index allows. We then prove that the necessity of the pillar places no restriction on its concentration or contestability, show that aggregating subdomains understates concentration by exactly the cross-domain variance of control shares, and derive conditional comparative statics under which resource holders convert wealth into influence over rules. A comparison of market-capitalist societies, communist party-states, social democracies, Islamic states, Catholic monarchies and secular democracies finds the same function held by different institutions, with documented capture episodes and documented checks in every type. Seven hypotheses with stated falsifiers make the capture claim testable. Revelation 13 and 18 are read typologically as images of economic participation conditioned on allegiance. The main limitation is that no coded cross-regime dataset yet exists, so the comparative claims remain qualitative.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Every polity decides who controls its resources, whether or not it has a treasury, a bank, or a word for property. A foraging camp decides who carves the meat and who receives which portion. A pastoral lineage decides whose cattle pay a bridewealth or a blood debt. A medieval caliphate assigns revenues to a treasury and endowments to trustees, an early modern monarchy pledges future taxes to its bankers, a Soviet ministry allocates steel by plan, and a modern democracy delegates the supply of money to an independent central bank. The institutions differ almost completely. The problem they solve does not.
+
+This paper is the first of seven Parts of a series whose thesis is that the ideology of governance changes while its institutional functions remain. The series follows the framework of \citet{largo2026hbs}, which models a polity as a directed multiplex network whose layers record distinct mechanisms of constraint, and which asks when concentration and coordination across those layers turn into unaccountable domination. The series uses six pillars: financial power~$\pF$ (who controls the resources), political power~$\pP$ (who makes the laws), judicial power~$\pJ$ (who interprets them), ideological power~$\pI$ (who shapes beliefs), coercive power~$\pC$ (who enforces the rules), and productive power~$\pW$ (who produces the wealth that sustains everything). Part VII \citep{long2026formalized} proves the general claim, called Proposition~A, that every functioning governance system contains all six functions and the dependencies among them, and it proves that this structural necessity does not imply Proposition~B, the contingent and measurable claim that the functions have been captured by a coalition that escapes independent accountability.
+
+The financial pillar is the one most easily misread. Popular usage equates control of resources with capitalists, bankers, or a single class, and so treats the existence of the pillar as an accusation. The argument here runs the other way. Resource command exists in a hunter-gatherer camp, where it is held by everyone at once through sharing norms; what varies across polities is how concentrated it is, how contestable it is, and how tightly it is coupled to rule-making, adjudication, belief, coercion, and work. A theory that cannot separate the existence of the function from its concentration will find domination everywhere and therefore explain nothing.
+
+The necessity of the function and the contingency of its concentration can both be proved. From the scarcity axiom of the series and an explicit assumption that unsettled conflict risks dissolution, a collective with no recognized way of settling claims loses its chance of survival geometrically over time, and in a collective that survives almost every conflict is settled by such a procedure (\cref{prop:financial-power:necessity}). The same necessity places no restriction on how concentrated or contestable control is (\cref{prop:financial-power:nonimplication}); this is the pillar-level case of the non-implication that Part VII proves for all six pillars.
+
+Three further results make the comparison measurable. Aggregate concentration understates the concentration of subdomains such as credit, land, and the public budget by exactly the cross-domain variance of control shares (\cref{prop:financial-power:aggregation-gap}). A resource holder's investment in influence over other pillars rises with its share and falls with the contestability of the receiving pillar (\cref{prop:financial-power:influence}). And lenders to a sovereign are protected by the threat of exclusion from future credit, not by control of legislation, whenever the ruler's future need for credit is large enough (\cref{prop:financial-power:sovereign-credit}). The six regime types of the series are then compared with the same questions and the same standard of evidence, and seven hypotheses are stated together with the observations that would falsify them.
+
+Two scope commitments govern everything that follows. The phrase ``Beast System'' names the universal six-function structure that Part VII proves present in every governance system; it is never a label for a religion, a people, a profession, a regime, or a person. And the comparison asks how the universal function is distributed in each regime type, not whether a civilization ``has'' it. Because every type has it, the comparison is even-handed by construction, and the evidentiary burden falls entirely on claims of capture.
+
+\section{The financial pillar in the multiplex network}
+\label{sec:pillar}
+
+\subsection{Shared notation}
+
+The series inherits its formal objects from \citet{largo2026hbs} and does not redefine them. A polity at time~$t$ is a directed multiplex network $G_t=(V_t,E_t)$ whose nodes are organizations or coherent actor groups. Each pillar $m$ in the index set $\Pillars=\{\pF,\pP,\pJ,\pI,\pC,\pW\}$, with $M=|\Pillars|=6$, contributes a layer with adjacency $A^m_t$ and edge weights $a^m_{ij,t}\in[0,1]$ that record the documented capacity of actor~$i$ to constrain a feasible action of actor~$j$ through mechanism~$m$. A many-to-many role map assigns actors to pillars. Actor~$i$ holds a normalized share $s^m_{i,t}$ of decision-relevant control in pillar~$m$, with $\sum_i s^m_{i,t}=1$; concentration is the Herfindahl-Hirschman index $H_{m,t}=\sum_i (s^m_{i,t})^2$ \citep{hirschman1964}; contestability $Q_{m,t}\in[0,1]$ scores transparency, appeal rights, independence, competition, and credible replacement of decision makers. The illustrative index of unaccountable concentration is $U_t=\sum_m \omega_m H_{m,t}(1-Q_{m,t})$ with preregistered weights $\omega_m\geq 0$ summing to one.
+
+The remaining objects concern relations between pillars. Cross-pillar integration $C_{mn,t}\in[0,1]$ is the extent to which one coalition commands appointments, budgets, sanctions, or agenda in both $m$ and $n$, and the integration statistic is $\Integ_t=\tfrac{2}{M(M-1)}\sum_{m<n}C_{mn,t}$, the mean over the fifteen pillar pairs. A capture link $(i\to j,m)$ requires privileged access or discretion, a resulting weakening of applicable accountability or contestability, and material evidence tying the asymmetry to an institutional output. All of these objects are due to \citet{largo2026hbs}; the six-pillar version with fifteen pairs follows the series convention.
+
+The financial pillar corresponds to the source's resource function $R$: command over capital, land, credit, investment, infrastructure, public budgets, and strategic means of production. The source cautions that ownership, scale, or the administration of public goods is not by itself evidence of domination, and that in a party-state the resource function can sit under political authority \citep{largo2026hbs}. The label $\pF$ is written in sans-serif throughout so that it is never confused with the role map.
+
+\subsection{The allocation problem}
+
+\begin{definition}[Allocation problem]
+\label{def:financial-power:allocation-problem}
+Let $N$ be a collective of $n\geq 2$ members and $\mathcal{K}$ a finite set of goods, with available stock $\omega\in\mathbb{R}^{\mathcal{K}}_{+}$ at a given date. Each member $i$ holds a claim $c_i\in\mathbb{R}^{\mathcal{K}}_{+}$ on the stock. A \emph{conflict} occurs when the claims on some good $k$ are jointly infeasible, $\sum_{i\in N}c_{ik}>\omega_k$. An \emph{allocation problem} is the task of determining, for each conflict, which feasible assignment $x=(x_i)_{i\in N}$ with $\sum_i x_i\leq\omega$ prevails, together with the related decisions of who may use a good, who may store it, and what is held in reserve.
+\end{definition}
+
+Scarcity in this sense is relative to claims, not absolute. A group can be materially comfortable and still face conflicts, because the meat of one animal, the best grazing in a dry season, or the revenue of one year is claimed by more people, or for more purposes, than it can satisfy. This is the scarcity axiom of the series (Ax1: resources are finite and claims on them conflict), whose general statement and refinement belong to Part VII.
+
+\begin{definition}[Settlement]
+\label{def:financial-power:settlement}
+A conflict is \emph{settled} when it is resolved by a procedure that belongs to the collective's repertoire, meaning that (a) the procedure applies to a class of situations rather than to a single instance, (b) members can anticipate the resulting assignment from a description of the procedure and of the situation, and (c) members comply with the assignment or are held to it by others. A conflict resolved without such a procedure, by unregulated contest whose outcome depends on whoever prevails in the moment, is \emph{unsettled}. The \emph{financial pillar} of a collective is the set of procedures that settle its conflicts, together with the actors who operate them.
+\end{definition}
+
+The definition is deliberately broad on the side of form and narrow on the side of function. A sharing norm, an ownership rule with voluntary exchange, a plan target, a waqf deed, a credit contract, a lottery, and a ritualized contest with known rules all settle conflicts. A brawl over a carcass does not, unless brawls themselves follow rules that the parties recognize. The broad side guards against the error of identifying the function with one institution; the narrow side keeps the definition from being satisfied by anything whatever.
+
+\begin{definition}[Settlement modes]
+\label{def:financial-power:settlement-modes}
+A settlement procedure is classified by the source of the assignment it produces: a \emph{sharing norm} assigns goods by a rule of distribution binding on the holder; \emph{property and exchange} assigns goods by prior entitlement and voluntary transfer at agreed terms; \emph{command allocation} assigns goods by the decision of an office; an \emph{endowment} assigns the yield of a dedicated asset to stated purposes under a trustee; \emph{credit} assigns present goods against a promise of future repayment. Real procedures combine modes.
+\end{definition}
+
+The modes are a coding device, not a typology of societies. A Ju/'hoansi camp uses sharing norms and also recognizes ownership of arrows; a market economy uses property and exchange and also command allocation through public budgets; an Ottoman province combined command allocation, endowments, and tax farms that were a form of credit to the treasury.
+
+\begin{definition}[Allocation regime]
+\label{def:financial-power:allocation-regime}
+The \emph{allocation regime} of a polity at time $t$ is the tuple consisting of its settlement modes, the actors who hold control shares $s^{\pF}_{i,t}$ in them, the concentration $H_{\pF,t}$, the contestability $Q_{\pF,t}$, and the five couplings $C_{\pF n,t}$ for $n\in\{\pP,\pJ,\pI,\pC,\pW\}$.
+\end{definition}
+
+The control share $s^{\pF}_{i,t}$ is meant to be measured from documents rather than inferred from outcomes. Its observable components include asset shares, shares of bank credit, shares of output produced by state-owned enterprises, shares of the public budget under discretionary control, shares of procurement awards, and rights to collect rent or tribute. Contestability $Q_{\pF,t}$ is scored from open entry, competitive tendering, beneficial-ownership disclosure, independent audit, bankruptcy that actually binds, antitrust enforcement, and the independence of the monetary authority.
+
+\subsection{Concentration and its normalization}
+
+The index $H_{\pF,t}$ lies in $[1/n,1]$ for a polity of $n$ actors, with the lower bound attained only at equal shares. Comparisons across polities of different size therefore require normalization. We use
+\begin{equation}
+\label{eq:hstar}
+H^{*}_{\pF,t}=\frac{H_{\pF,t}-1/n}{1-1/n}\in[0,1],\qquad n\geq 2,
+\end{equation}
+which is zero at equal shares and one when a single actor holds everything. The financial term of the unaccountable-concentration index is $u_{\pF,t}=H_{\pF,t}(1-Q_{\pF,t})$, so that $U_t=\sum_m\omega_m u_{m,t}$ in the notation of \citet{largo2026hbs}. The term is small when control is dispersed or when concentrated control is open to effective challenge, and it approaches one only when one actor holds the resources and nobody can contest how they are used.
+
+\subsection{Subdomains and the aggregation gap}
+
+Financial control is not one thing. A polity's credit market, its land, its public budget, and its procurement system may each be held by different actors. Aggregating the subdomains into one share vector loses information in a precise way.
+
+\begin{proposition}[Aggregation gap]
+\label{prop:financial-power:aggregation-gap}
+Let the financial pillar consist of subdomains $k=1,\dots,K$ with weights $\beta_k\geq 0$, $\sum_k\beta_k=1$, and control-share vectors $s^{k}=(s^{k}_i)_{i\in N}$, each summing to one. Define the aggregate share $\bar s_i=\sum_k\beta_k s^{k}_i$. Then
+\begin{equation}
+\label{eq:aggregation-gap}
+\sum_{k=1}^{K}\beta_k H(s^{k})-H(\bar s)=\sum_{i\in N}\operatorname{Var}_\beta\bigl(s^{\cdot}_i\bigr)\geq 0,
+\end{equation}
+where $\operatorname{Var}_\beta(s^{\cdot}_i)=\sum_k\beta_k(s^{k}_i-\bar s_i)^2$ is the $\beta$-weighted variance of actor $i$'s share across subdomains. Equality holds if and only if every actor holds the same share in every subdomain of positive weight.
+\end{proposition}
+
+\begin{proof}
+The aggregate shares sum to one, since $\sum_i\bar s_i=\sum_k\beta_k\sum_i s^k_i=\sum_k\beta_k=1$, so $H(\bar s)$ is a valid concentration index. For a fixed actor $i$, the identity $\sum_k\beta_k(s^k_i)^2-\bigl(\sum_k\beta_k s^k_i\bigr)^2=\sum_k\beta_k(s^k_i-\bar s_i)^2$ is the usual decomposition of a second moment into a squared mean and a variance; it uses only $\sum_k\beta_k=1$. Summing over $i$ gives
+\[
+\sum_k\beta_k\sum_i(s^k_i)^2-\sum_i\bar s_i^{\,2}=\sum_i\operatorname{Var}_\beta(s^{\cdot}_i),
+\]
+which is~\eqref{eq:aggregation-gap}. Each variance is nonnegative and vanishes exactly when $s^k_i=\bar s_i$ for every $k$ with $\beta_k>0$.
+\end{proof}
+
+\begin{example}[Separated and fused holdings]
+\label{ex:aggregation}
+Consider three actors and three equally weighted subdomains: land, credit, and the public budget. In a \emph{separated} configuration actor $k$ holds all of subdomain $k$. Each subdomain then has $H=1$, so the weighted mean of subdomain concentrations is $1$, while aggregate shares are $(1/3,1/3,1/3)$ and $H(\bar s)=1/3$. The gap is $2/3$. In a \emph{fused} configuration one actor holds all three subdomains, every index equals $1$, and the gap is $0$. The numbers are hypothetical; the point is that the aggregate index rates the separated polity as dispersed even though every subdomain is a monopoly.
+\end{example}
+
+The gap measures within-pillar specialization: it is large when different actors dominate different subdomains and zero when the same actors hold the same shares everywhere. It is therefore a within-pillar analogue of the cross-pillar integration that \citet{largo2026hbs} records with $C_{mn,t}$, but it is not that object, and Part VII owns the formal treatment of integration. The practical lesson is that a polity should be coded subdomain by subdomain, with the aggregate reported alongside the gap, since a low aggregate index can conceal monopolies that do not overlap.
+
+\section{Necessity of the financial pillar}
+\label{sec:necessity}
+
+\subsection{The derivation}
+
+The scarcity axiom alone does not imply that a collective must have a financial pillar. A group could in principle resolve every conflict by unregulated contest. The derivation therefore needs a second assumption that says what unsettled conflict costs, and it is better to state that assumption openly than to hide it inside the word ``persistence''.
+
+\begin{assumption}[Scarcity, pillar form]
+\label{ass:scarcity}
+Time is discrete, $t=1,2,\dots$, and $\mathcal{F}_{t-1}$ denotes the history up to the end of period $t-1$. On the event that the collective exists at the start of period $t$, a conflict in the sense of \cref{def:financial-power:allocation-problem} occurs in period $t$ with conditional probability at least $p>0$ given $\mathcal{F}_{t-1}$.
+\end{assumption}
+
+\begin{assumption}[Dissolution hazard]
+\label{ass:hazard}
+On the event that a conflict in period $t$ is unsettled, the collective dissolves in period $t$ with conditional probability at least $q>0$ given $\mathcal{F}_{t-1}$ and on the conflict being unsettled. Dissolution means that the collective ceases to make and enforce collective decisions as one body: it breaks into groups that no longer coordinate, or it suffers violence that ends cooperation.
+\end{assumption}
+
+At most one conflict is indexed per period; a period with several conflicts counts once, and \cref{ass:hazard} applies to any period that contains an unsettled conflict. Write $Y_T$ for the number of periods in $1,\dots,T$ with a conflict, $Z_T$ for the number of periods with an unsettled conflict, with the convention $Z_T/Y_T:=0$ when $Y_T=0$, and $S_T$ for the event that the collective survives through period $T$.
+
+\begin{proposition}[Necessity of the financial pillar]
+\label{prop:financial-power:necessity}
+Under \cref{ass:scarcity,ass:hazard}, for every horizon $T$ and every integer $k\geq 0$:
+\begin{enumerate}
+\item[(a)] $\Prob(S_T\cap\{Z_T\geq k\})\leq(1-q)^k$;
+\item[(b)] $\Prob(S_T\cap\{Y_T<pT/2\})\leq e^{-pT/8}$;
+\item[(c)] if the collective has no settlement procedure at all, so that $Z_T=Y_T$, then $\Prob(S_T)\leq(1-q)^{\lceil pT/2\rceil}+e^{-pT/8}$;
+\item[(d)] if $\Prob(S_T)\geq\nu>0$, then
+\[
+\Prob\Bigl(\frac{Z_T}{Y_T}\geq\frac{2k}{pT}\,\Big|\,S_T\Bigr)\leq\frac{(1-q)^k+e^{-pT/8}}{\nu}.
+\]
+\end{enumerate}
+In particular, a collective without a financial pillar cannot survive with probability bounded away from zero as the horizon grows, and in a collective that does survive with probability at least $\nu$ for every horizon, the share of conflicts settled by a recognized procedure converges to one in conditional probability.
+\end{proposition}
+
+\begin{proof}
+(a) Let $\tau_j$ be the period of the $j$-th unsettled conflict, with $\tau_j=\infty$ if there is none, and let $A_j$ be the event that $\tau_j\leq T$ and the collective survives period $\tau_j$. Set $A_0$ to be the sure event. A $j$-th unsettled conflict can occur only if the collective survived the $(j-1)$-th, so $A_j\subseteq A_{j-1}$. Conditional on the history before $\tau_j$ and on the conflict being unsettled, \cref{ass:hazard} gives survival probability at most $1-q$. Hence $\Prob(A_j)\leq(1-q)\Prob(\tau_j\leq T,\ \text{alive at }\tau_j)\leq(1-q)\Prob(A_{j-1})$, and by induction $\Prob(A_k)\leq(1-q)^k$. If the collective survives through $T$ and $Z_T\geq k$, then the $k$-th unsettled conflict occurred by $T$ and was survived, so $S_T\cap\{Z_T\geq k\}\subseteq A_k$.
+
+(b) Enlarge the probability space with independent uniform variables $U_1,U_2,\dots$ on $[0,1]$. By \cref{ass:scarcity}, the conflict indicator in period $t$ can be represented as $\mathbf{1}\{U_t\leq p_t\}$ for an $\mathcal{F}_{t-1}$-measurable $p_t\geq p$ while the collective exists; after dissolution, define the indicator as $\mathbf{1}\{U_t\leq p\}$. The extended count then satisfies $\tilde Y_T\geq B_T=\sum_{t\leq T}\mathbf{1}\{U_t\leq p\}$, which is binomial with mean $pT$, and $\tilde Y_T=Y_T$ on $S_T$. The multiplicative Chernoff bound for the lower tail of a binomial variable, $\Prob(B_T\leq(1-\delta)pT)\leq\exp(-\delta^2pT/2)$, with $\delta=1/2$ gives $\Prob(S_T\cap\{Y_T<pT/2\})\leq\Prob(B_T<pT/2)\leq e^{-pT/8}$.
+
+(c) If every conflict is unsettled, then on $S_T\cap\{Y_T\geq pT/2\}$ we have $Z_T\geq\lceil pT/2\rceil$, so by (a) that event has probability at most $(1-q)^{\lceil pT/2\rceil}$. Adding the bound in (b) for the complementary part of $S_T$ gives the claim.
+
+(d) On $S_T\cap\{Z_T<k\}\cap\{Y_T\geq pT/2\}$ we have $Z_T/Y_T<2k/(pT)$. The event in the numerator of the conditional probability is therefore contained in $(S_T\cap\{Z_T\geq k\})\cup(S_T\cap\{Y_T<pT/2\})$, whose probability is bounded by (a) and (b). Dividing by $\Prob(S_T)\geq\nu$ gives the inequality. Taking $k=\lceil\sqrt T\,\rceil$, the threshold $2k/(pT)$ and the bound both tend to zero as $T\to\infty$, which proves the final statement.
+\end{proof}
+
+The proposition is a conditions-of-persistence result. It says that collectives without a financial pillar do not last; it does not say that any particular collective acquired its pillar because the pillar helps it last. Elster's objection to functional explanation applies with full force here: an account of why an institution exists by reference to its beneficial effects requires a feedback mechanism from effect to cause, and none is asserted \citep{elster1983}. Hempel's objection also applies: from the need for a function nothing follows about which institution supplies it, since many functional equivalents can satisfy the same need \citep{hempel1959,merton1968}. The proposition is accordingly stated about the class of settlement procedures, not about property, markets, treasuries, or banks.
+
+\begin{example}[Survival without settlement]
+\label{ex:survival}
+Suppose, purely for illustration, that a band of foragers meets a conflict over some good in at least one week in ten ($p=0.1$), and that each unsettled conflict carries a five percent chance of permanent fission or lethal violence ($q=0.05$). If the band had no settlement procedure at all, \cref{prop:financial-power:necessity}(c) bounds its probability of surviving ten years ($T=520$ weeks) by $0.95^{26}+e^{-6.5}\approx 0.265$, and of surviving fifty years ($T=2600$) by $0.95^{130}+e^{-32.5}\approx 0.0013$. The parameters are invented; the geometric decay is not.
+\end{example}
+
+\subsection{Scope of the assumptions}
+
+The derivation rests on \cref{ass:hazard}, and its weak point is there. If unsettled conflicts were costless, so that $q=0$, a collective could persist while every carcass went to whoever seized it first, and the proposition would fail. Two replies narrow rather than remove this possibility. A practice in which the first taker keeps the good, known in advance and accepted by the others, is a settlement procedure in the sense of \cref{def:financial-power:settlement}: it applies to a class of situations, its outcome can be anticipated, and members comply with it. The case that escapes the proposition is therefore a collective whose members fight over goods without any shared expectation of the outcome and suffer no risk of dissolution from doing so. We know of no ethnographic description of such a collective, and the hard cases below suggest the opposite: the societies most often cited as lacking authority spend considerable effort settling claims on goods.
+
+The second weak point is the meaning of dissolution. Among mobile foragers, a camp can split and its members can join other camps without the wider society ending. If every split counted as dissolution, bands would dissolve constantly and the proposition would say little. The relevant collective is the unit that makes collective decisions, which for the Ju/'hoansi is a network of camps linked by kinship and exchange, not a single camp. A split that follows recognized lines of access, with people moving to places where they hold rights through kin, is itself a settlement procedure, since it assigns people to resources by a rule they anticipate. Fission along such lines is exit, and exit is part of the financial pillar when it reassigns access to land and water. For the same reason the proposition says nothing about transient aggregates such as crowds or short-lived coalitions, which make no collective decisions to sustain. Part VI owns the general treatment of exit and voice (Definition 2.5 of \citealt{long2026productive}).
+
+\subsection{Minimal forms in stateless and consensus societies}
+
+The societies that anthropology describes as egalitarian, acephalous, or organized against the state are the natural test set. Each exhibits the financial pillar in a form with no office, no treasury, and dispersed control, and none exhibits its absence.
+
+Among the Ju/'hoansi of the Kalahari, meat from a large animal is distributed according to rules that assign the role of distributor to the owner of the arrow that killed it, and arrows circulate as gifts, so that the distributor is often not the hunter \citep{marshall1976,lee1979}. Distribution follows kinship and camp membership, and a successful hunter who boasts is met with ritualized deprecation of the kill, which Lee describes as ``insulting the meat'' \citep{lee2013}. Wiessner's records of everyday talk show that criticism and complaint about failures to share are frequent and that they bring offenders back into line \citep{wiessner2005}. Each element meets \cref{def:financial-power:settlement}: the rules apply to every kill, their outcome can be anticipated, and compliance is enforced by others. Control shares are close to equal, so $H_{\pF}$ is close to $1/n$ and $H^{*}_{\pF}$ close to zero.
+
+Woodburn's comparison of immediate-return societies, including the Hadza, Mbuti, !Kung, and Batek, generalizes the point. These societies avoid storage and accumulation, make sharing obligatory, and maintain what Woodburn calls leveling mechanisms that prevent any member from converting a temporary advantage into lasting control \citep{woodburn1982}. The equality of these societies is an outcome that institutions produce and defend, not the absence of institutions. Boehm reaches the same conclusion from a broader comparative sample of foragers: egalitarian bands sustain equality through a reverse dominance hierarchy in which the group collectively sanctions would-be dominants, and enforcement of meat-sharing against hoarders is one of its recurring targets \citep{boehm1999}.
+
+The Nuer, whom Evans-Pritchard described as living in ordered anarchy without government, allocate cattle through kinship, bridewealth, and compensation for homicide \citep{evanspritchard1940}. The so-called leopard-skin chief has no coercive authority; he mediates feuds and helps arrange compensation in cattle, which the parties accept under the shadow of renewed feud. Here the financial pillar settles not only access to grazing and milk but also the price of peace between lineages, and it does so through a mediator without power to command. In the Amazonian societies that Clastres described, the obligation of the headman runs in the opposite direction from tribute: he is expected to be generous with his goods, and a headman who tries to command loses his followers \citep{clastres1987}. Clastres's thesis is that these societies actively prevent political power from separating from the group. That thesis is consistent with the necessity of the financial pillar and incompatible with any claim that its concentration is inevitable.
+
+Ostrom's studies of long-enduring common-pool resource institutions give the most direct evidence on how small groups settle conflicting claims without either a state or private property in the usual sense \citep{ostrom1990}. The design principles she identified include clearly defined boundaries of the resource and of its users, appropriation rules matched to local conditions, collective-choice arrangements in which those affected can modify the rules, monitoring, graduated sanctions, accessible conflict-resolution mechanisms, recognition of the users' right to organize, and nesting of small units within larger ones. A later review of empirical studies found the principles well supported, with some refinements \citep{cox2010}. In the vocabulary of this paper, a well-designed commons is an allocation regime with dispersed control and high contestability: users appropriate according to known rules, and those rules are themselves open to collective revision. Ellickson's study of ranchers in Shasta County shows a modern variant, in which neighbors settle damage from straying cattle by informal norms rather than by the formal law that nominally applies \citep{ellickson1991}.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Minimal forms of the financial pillar in societies without a state. Each row reports the settlement procedure, the actors who hold control, and the strongest reading on which the function is absent.}
+\label{tab:minimal}
+\begin{tabularx}{\linewidth}{@{}L{2.3cm}YYY@{}}
+\toprule
+Case & Settlement procedure & Holders of control & Strongest counter-reading \\
+\midrule
+Ju/'hoansi & Arrow-owner rule for meat, gift exchange, demand sharing & All adults, with distributors rotating as arrows circulate & No office allocates anything, but the rules allocate every kill \\
+Immediate-return foragers & Obligatory sharing and avoidance of storage & The camp as a whole through leveling sanctions & Little is stored, but what is acquired is still shared by rule \\
+Nuer & Cattle rights, bridewealth, and homicide compensation & Lineages, with a mediator who cannot command & No government exists, yet compensation in cattle settles feuds \\
+Amazonian groups & The headman's obligatory generosity & The group, which withholds support from a commanding headman & Power is prevented from separating, not allocation from occurring \\
+Ostrom commons & Boundaries, appropriation rules, monitoring, and graduated sanctions & Users acting through collective-choice arrangements & No owner or state controls the resource, but the users' rules do \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\Cref{tab:minimal} summarizes the cases. In every row the function is present and its holders are many. The cases thus support the necessity claim and, at the same time, the claim that concentration is contingent. Two cautions apply. Ethnographies of foragers describe groups observed in marginal environments and under the influence of neighbors and states, and foraging societies differ widely among themselves \citep{kelly1995}. Graeber and Wengrow argue further that many early societies moved between hierarchical and egalitarian arrangements, sometimes seasonally, and deliberately chose among political forms \citep{graeber2021}. Neither caution weakens the necessity claim, which requires only that some settlement procedure exist; both strengthen the claim that its concentration is a matter of choice and circumstance.
+
+\subsection{Counterexample attempts}
+
+The strongest is Sahlins's ``original affluent society'' \citep{sahlins1972b}. If foragers' wants are limited and easily satisfied, the argument runs, there is no scarcity and so no allocation problem. The reply is that \cref{ass:scarcity} concerns conflicting claims, not shortage. Foragers who spend few hours obtaining food still divide each large kill among claimants who cannot all receive the best portions, and the elaborate sharing rules recorded by Marshall and Lee exist precisely because claims on particular goods conflict \citep{marshall1976,lee1979}. Sahlins's argument, if accepted, lowers $p$; it does not make it zero.
+
+A second attempt appeals to markets. In a pure market economy, on this view, nobody allocates: prices do. But prices settle conflicts only against a background of property rules that say who may sell what, and those rules are made, interpreted, and enforced by other pillars. Allocation by price is a settlement procedure of the property-and-exchange mode, and control shares in it are given by the distribution of endowments. The market answer to the guiding question is ``whoever owns,'' which is an answer, not a dissolution of the question.
+
+A third attempt imagines post-scarcity abundance through automation. It fails twice: no existing governance system satisfies it, and even a society with abundant manufactured goods would allocate land, energy, computation, and attention, which remain finite and contested.
+
+The case that narrows the claim is the one already identified: a collective in which unsettled conflicts carry no risk of dissolution. The falsifier for the financial pillar's necessity is therefore precise. It is a persistent collective whose members hold conflicting claims on some good and resolve them predominantly without any procedure in the sense of \cref{def:financial-power:settlement}. We found no documented case in the sources reviewed (cutoff October 2026).
+
+\subsection{Necessity without concentration}
+
+The necessity of the financial pillar implies nothing about how its control is distributed or how open it is to challenge. The next result makes this exact at the level of the pillar; Part VII proves the corresponding non-implication for all six pillars together.
+
+\begin{proposition}[Pillar-level non-implication]
+\label{prop:financial-power:nonimplication}
+Fix $n\geq 2$. For every $h\in[1/n,1]$ there is a control-share vector $s$ on $n$ actors with $H(s)=h$. Consequently, for every $h\in[1/n,1]$ and every $c\in[0,1]$ there is an allocation regime in which the financial pillar exists, $H_{\pF}=h$, and $Q_{\pF}=c$, and the financial term $u_{\pF}=H_{\pF}(1-Q_{\pF})$ takes every value in $[0,1]$.
+\end{proposition}
+
+\begin{proof}
+For $a\in[1/n,1]$ let $s(a)$ give share $a$ to one actor and $(1-a)/(n-1)$ to each of the others. Then $H(s(a))=a^2+(1-a)^2/(n-1)$, which is continuous in $a$, equals $1/n$ at $a=1/n$, and equals $1$ at $a=1$. By the intermediate value theorem every $h\in[1/n,1]$ is attained. Contestability is scored from features (disclosure, audit, entry, appeal) that the share vector does not determine, so any $c\in[0,1]$ can be paired with any $h$; existence of the pillar requires only that some settlement procedure operate, which it does under any share vector. Finally $u_{\pF}=h(1-c)$ equals $0$ at $c=1$ and equals $h$ at $c=0$, so taking $h=1$ and letting $c$ range over $[0,1]$ attains every value in $[0,1]$.
+\end{proof}
+
+The proposition is elementary, and its role is to block a common inference. That every polity has someone who controls resources is a structural fact. That some polity's resource control is concentrated and unaccountable is an empirical claim about $H_{\pF}$, $Q_{\pF}$, and the couplings $C_{\pF n}$, which requires evidence of the kind \citet{largo2026hbs} specifies for capture links. The rest of this paper is about that evidence.
+
+\section{Literature on financial power}
+\label{sec:literature}
+
+Research on resource command and political power has developed along four lines that rarely meet. Each supplies a mechanism the financial pillar needs, and each has a rival literature that limits it.
+
+The economic theory of regulation asks how resource holders shape the rules that govern them. Stigler's theory of economic regulation treats regulation as a good demanded by industries and supplied by the state, so that regulatory agencies tend to serve the regulated \citep{stigler1971}. Peltzman generalized the model: a regulator balances producer and consumer pressure, so outcomes fall between pure capture and pure public interest \citep{peltzman1976}. Becker showed that competition among pressure groups limits the transfers any one group can extract, because deadweight losses grow with the size of the transfer and mobilize the losers \citep{becker1983}. Laffont and Tirole recast capture as a principal-supervisor-agent problem in which the danger of collusion between the supervisor and the regulated firm shapes the optimal design of incentives \citep{laffont1991}. Grossman and Helpman modeled trade protection as the outcome of contribution schedules offered to an incumbent government \citep{grossman1994}. Dal B\'o surveys the theory and evidence \citep{dalbo2006}, and Carpenter and Moss insist on a demanding definition: capture requires showing that regulation was directed away from the public interest and toward the regulated industry by the industry's own intent and action, not merely that the industry benefited \citep{carpentermoss2014}. That standard is the same one the capture link of \citet{largo2026hbs} encodes.
+
+Rent-seeking theory measures the costs of the contest itself. Tullock observed that resources spent to obtain or defend monopolies and tariffs are a social cost beyond the usual deadweight triangle \citep{tullock1967}; Krueger named the activity rent seeking and estimated its scale in licensing regimes \citep{krueger1974}; Posner argued that competition for rents can dissipate them entirely \citep{posner1975}. Olson supplied the organizational asymmetry that makes such contests one-sided: small groups with concentrated stakes organize more readily than large groups with diffuse ones \citep{olson1965}. These works explain why concentrated resource control tends to seek conversion into rule-making power. They do not show that the conversion succeeds, and direct studies of influence suggest that it often does not.
+
+Those studies concern democracies, and they divide sharply. Lindblom argued that business holds a privileged position because governments depend on private investment for the prosperity on which they are judged \citep{lindblom1977}. Przeworski stated the same dependence as a dilemma for electoral socialism: a party that threatens profits risks the investment its program needs \citep{przeworski1985}. Mills described an interlocking economic, political, and military elite in the postwar United States \citep{mills1956}, and Winters defines oligarchy by the political work of wealth defense, which he traces from Athens and Rome to the modern United States \citep{winters2011}. Against these accounts, Ansolabehere, de Figueiredo, and Snyder find that campaign money in the United States is small relative to the value of government policy and behaves more like consumption than investment \citep{ansolabehere2003}, and Baumgartner and colleagues find, in a large sample of issues, that the side with more resources often fails to win \citep{baumgartner2009}. Mizruchi documents the fragmentation of the American corporate elite after the 1970s, which cuts against claims of a unified business class \citep{mizruchi2013}. Gilens and Page's finding that economic elites and organized business interests have substantial independent influence on policy while average citizens have little \citep{gilens2014} is disputed by Branham, Soroka, and Wlezien, who show that the preferences of the affluent and the middle class differ on relatively few issues and that the affluent win only modestly more often when they do differ \citep{branham2017}. Culpepper offers a reconciliation: business power is strongest in quiet politics, on technical issues of low public salience \citep{culpepper2010}.
+
+Political economists of the state study the relation between rulers and the resources they command. Kornai's soft budget constraint describes a paternalistic state that rescues loss-making enterprises, so that the enterprises' expectations of rescue erode the discipline of the budget \citep{kornai1986,kornai1992}. North, Wallis, and Weingast describe limited-access orders in which the dominant coalition creates rents for its members and so binds them to keep the peace, and open-access orders in which entry into economic and political organization is impersonal \citep{nww2009}. The rentier-state literature, originating with Mahdavy's study of Iran and developed by Beblawi and Luciani, holds that states living on external rents need not bargain with taxpayers \citep{mahdavy1970,beblawiluciani1987}; Ross tests the claim cross-nationally \citep{ross2001,ross2012}, and Haber and Menaldo find that the association between resource wealth and authoritarianism does not survive within-country analysis over long time series \citep{habermenaldo2011}. Levi models rulers as revenue maximizers constrained by their bargaining power, transaction costs, and discount rates, and argues that compliance is quasi-voluntary when taxpayers believe others also pay and the ruler keeps its bargains \citep{levi1988}. Tilly traces European state formation along capital-intensive and coercion-intensive paths, in which rulers obtained the means of war either from merchants and cities or by direct extraction from the land \citep{tilly1990}. This paper owns the financing side of that fiscal-military account; Part V treats its coercive side \citep{long2026coercive}.
+
+Two normative and sociological works connect these lines to the cross-pillar question. Walzer defines tyranny as the conversion of dominance in one sphere of distribution into dominance in another, as when wealth buys office or office buys wealth \citep{walzer1983}. Bourdieu treats economic, cultural, social, and symbolic capital as convertible into one another at rates that are themselves objects of struggle \citep{bourdieu1989}. Both supply a vocabulary for what the multiplex model measures with the couplings $C_{\pF n}$: the degree to which control of resources carries control of rules, rulings, beliefs, sanctions, and work. Mann's model of ideological, economic, military, and political networks of power is the nearest precedent for a pluralist decomposition of social power \citep{mann1986}; Part IV summarizes it \citep[Section 4.2]{long2026ideological}, and Part VII compares it with the six-pillar scheme.
+
+The capture literature tests resource-to-rule conversion mostly in one regime type, the market democracy, and the literatures on party-states, rentier states, and early modern fiscal states each describe resource command within one regime family. None places the universal allocation function, its necessity, and its regime-specific distribution in a single frame with common measures. That frame is what the six-pillar model provides, and the comparison below applies it.
+
+\section{Comparative analysis across six regime types}
+\label{sec:comparative}
+
+The six regime types of the series span two institutional dimensions rather than six exclusive categories. Market capitalism and social democracy describe how an economy organizes ownership, bargaining, and allocation; secular democracy describes how a constitution separates, delegates, and reviews authority over resources. Communist party-states, Islamic states, and the Catholic monarchies of early modern Europe combine a position on each dimension with a distinctive source of legitimacy. A single polity can therefore be coded on both dimensions, and most contemporary market-capitalist and social-democratic polities are also secular democracies. Each subsection below examines which institutions hold the financial pillar, how concentrated and contestable control is, how the pillar is coupled to the other five, what preserves accountability, and which capture episodes and checks are documented.
+
+The comparison is qualitative and draws on the historical record. Where it describes $H_{\pF}$, $Q_{\pF}$, $U_t$, or $\Integ_t$ as high or low, that description is a claim that a preregistered quantitative coding can test.
+
+\subsection{Market-capitalist societies}
+
+In market-capitalist societies the financial pillar is held mainly by private owners of capital, by banks and other financial intermediaries, by corporations, and by institutional investors, with a central bank controlling the supply of money and a state controlling a public budget. The dominant settlement mode is property and exchange, supplemented by command allocation through taxation and public spending. Control shares within subdomains can be highly concentrated: Piketty documents long periods in which the return on capital exceeded the growth rate and wealth concentration rose \citep{piketty2014}. Aggregate concentration across all actors is lower than within subdomains, which is the aggregation gap of \cref{prop:financial-power:aggregation-gap} at work.
+
+The characteristic coupling is $C_{\pF\pP}$, the conversion of resources into influence over rule-making, which \citet{largo2026hbs} calls the wealth-to-rules pathway. Evidence that the pathway operates is substantial. Igan, Mishra, and Tressel find that lenders who lobbied more intensively before the 2008 crisis made riskier loans and performed worse in the crisis \citep{igan2012}. Mian, Sufi, and Trebbi find that campaign contributions from the financial industry predicted congressional votes on the major housing and financial legislation of 2008, alongside constituents' mortgage distress \citep{mian2010}. Kalla and Broockman show experimentally that disclosing a constituent's status as a donor increased access to senior congressional officials \citep{kalla2016}. Bertrand, Bombardini, and Trebbi, and Blanes i Vidal, Draca, and Fons-Rosen, show that lobbyists' value depends heavily on their personal connections to officeholders, a revolving-door effect \citep{bertrand2014,blanes2012}. Faccio finds politically connected firms in many countries, more often where corruption is higher \citep{faccio2006}. Hacker and Pierson attribute the rise of top incomes in the United States to organized political combat over taxation and regulation \citep{hackerpierson2010}, and Bartels finds senators more responsive to affluent constituents \citep{bartels2008}.
+
+The counter-evidence is as substantial. Access is not outcome: Hall and Deardorff model lobbying as a subsidy of information and labor to legislators who already agree with the lobbyist \citep{hall2006}, which implies influence over agenda and detail more than over direction. The findings of Ansolabehere and colleagues, of Baumgartner and colleagues, and of Branham, Soroka, and Wlezien cited in \cref{sec:literature} show that money is small relative to stakes, that resource advantages often lose, and that the rich win mainly when their preferences coincide with those of the middle class. Mizruchi's account of elite fragmentation suggests that $\Integ_t$ for the American business community has declined rather than risen \citep{mizruchi2013}.
+
+Accountability in this regime type rests on open entry, antitrust law, disclosure of contributions and lobbying, competitive procurement, judicial review of regulation, a free press, and elections. Contestability is therefore high on paper, and the open empirical question is how much of it binds in quiet, technical domains, where Culpepper finds business power strongest \citep{culpepper2010}. Capture and its checks are both documented. The best documented capture episode in the sources reviewed is pre-crisis financial regulation, where both the lobbying evidence and the outcome evidence point in the same direction. The best documented checks are the frequent defeats of well-funded interests and the electoral reversals of policy that the pluralist literature records.
+
+The couplings $C_{\pF\pI}$, through sponsorship of research and ownership of media, and $C_{\pF\pJ}$, through the resources that let repeat players litigate, are plausible but less systematically measured. Part III analyzes the contest between repeat players and occasional litigants (Proposition 4.3 of \citealt{long2026judicial}), and Part IV shows that endorsements from captured authorities carry no information (Proposition 6.2 of \citealt{long2026ideological}).
+
+\subsection{Communist party-states}
+
+In the communist party-state the financial pillar is held by planners and ministries, by state banks, and by managers of state enterprises appointed through the party's personnel system. The dominant settlement mode is command allocation, with property and exchange confined to permitted margins. Formal concentration is extreme, since the state owns the principal means of production and the party controls appointments to the posts that allocate them. Kornai's account of the classical socialist system makes the party's monopoly of power the defining feature from which the economic features follow \citep{kornai1992}. In the terms of \citet{largo2026hbs}, the control path runs from appointment to allocation rather than from wealth to rules, and the coupling $C_{\pP\pF}$ is near its maximum by design. Part II owns the appointment channel (Definition 2.8 of \citealt{long2026political}); here we record its financial consequences.
+
+Formal concentration overstates effective concentration. Gregory's study of the Soviet archives shows that the top leadership could not allocate everything and bargained constantly with ministries and enterprises that held better information about their own capacities \citep{gregory2004}. Berliner's interviews with former Soviet managers documented the informal procurement agents who obtained scarce inputs outside the plan, and the networks of favors through which managers met targets \citep{berliner1957}; Ledeneva reconstructed the economy of favors, known as blat, that ran alongside the formal allocation of goods in the late Soviet period \citep{ledeneva1998}. These informal channels lowered effective concentration while also lowering contestability, since favors were by nature unrecorded and unreviewable. Kornai's soft budget constraint completes the picture: enterprises expected rescue from their administrative superiors, so loss did not lead to exit, and the allocation of credit followed bargaining power rather than performance \citep{kornai1986}.
+
+The reform-era People's Republic of China shows that the regime type admits wide variation. A large private sector emerged and came to produce much of output and employment \citep{lardy2014,naughton2007}. The banking system nevertheless remained dominated by state-owned banks whose senior executives are appointed through the party's personnel system, and Walter and Howie describe the resulting financial structure as serving party priorities \citep{walterhowie2011}. Allen, Qian, and Qian observe that China grew rapidly despite a formal legal and financial system weaker than standard theory would predict, and attribute much of the growth to firms financed through informal and alternative channels \citep{allen2005}. Milhaupt and Zheng argue that ownership is a poor guide to control, because large private firms are also tied to the party-state through their founders' political memberships and their dependence on state support \citep{milhaupt2015}. Cross-nationally, La Porta, L\'opez-de-Silanes, and Shleifer associate government ownership of banks with slower subsequent financial development \citep{laporta2002}, and Shleifer and Vishny model politicians' use of state firms to deliver employment and patronage \citep{shleifer1994}.
+
+Accountability in the classical system ran through the party's own control organs, so contestability against the party itself was low. Documented capture episodes include the bargaining and soft budgets that Kornai describes, which transferred resources to enterprises and officials with bargaining power. The transition from communism produced the clearest cases of reciprocal capture in the comparative record. Hellman found that early winners from partial reform blocked further reform that would have dissipated their rents \citep{hellman1998}; Hellman, Jones, and Kaufmann defined state capture as firms shaping the basic rules of the game through private payments to officials \citep{hellman2000}; Black, Kraakman, and Tarassova describe insider privatization in Russia \citep{black2000}; and Guriev and Rachinsky document the concentration of Russian industrial ownership among a small number of owners \citep{guriev2005}. Treisman argues that the conventional account of the loans-for-shares auctions overstates their role in that concentration \citep{treisman2010}, a reminder that even the canonical episode is contested. The documented checks within the regime type are the hard budget constraints that reform introduced in some sectors and the competition from non-state firms that limited the rents of state incumbents.
+
+\subsection{Social democracy and market socialism}
+
+In social democracies the financial pillar is mixed. Private capital owns most productive assets, but high taxation, a large public budget, public pension funds, and corporatist bargaining among employers, unions, and the state give organized labor and the state substantial shares of decision-relevant control. Korpi's power-resources theory explains the configuration as the product of labor's organizational strength, which allowed it to win through democratic politics what it could not win through ownership \citep{korpi1983}. Esping-Andersen traces how social democratic parties used state power to reduce workers' dependence on the market \citep{esping1985}, and Berman locates the movement's origin in a commitment to the primacy of politics over markets \citep{berman2006}. Hall and Soskice classify the economies that developed from these settlements as coordinated market economies, in which firms solve problems of training, finance, and wage setting through non-market institutions \citep{hallsoskice2001}.
+
+Social democracy combined high taxation with remarkably concentrated private ownership. H\"ogfeldt shows that Swedish corporate control was held through pyramids and dual-class shares by a few families and foundations, of which the Wallenberg sphere was the largest, and argues that social democratic governments tolerated this concentration as a stable partner for investment and employment \citep{hogfeldt2005}. Subdomain concentration in the ownership of large firms was therefore high, while the public budget, pensions, and wage setting were held by other actors. That is the separated configuration of \cref{ex:aggregation}, with a large aggregation gap.
+
+The most direct attempt to change who held the financial pillar was the Swedish proposal for wage-earner funds, which would have transferred a growing share of corporate equity to funds controlled by the labor movement. Pontusson's account shows how employers mobilized against the proposal, how the enacted version was diluted, and how the episode revealed the limits of social democratic power over investment \citep{pontusson1992}. Przeworski's dilemma predicts exactly this limit: a democratic government that threatens the returns to capital faces the possibility that investment falls \citep{przeworski1985}. Streeck argues that later decades shifted power from citizens to creditors as states financed themselves through debt \citep{streeck2014}.
+
+The couplings characteristic of this type are $C_{\pF\pW}$ and $C_{\pF\pP}$, but they take a bargained rather than a captured form: organized capital and organized labor both hold seats in the arenas where wages, pensions, and investment rules are set. Accountability rests on electoral competition, on the countervailing power of unions, and on transparency norms. Scheve and Stasavage show that the high progressive taxation of the twentieth century followed mass mobilization for war and arguments for fair compensation rather than democracy as such \citep{scheve2016}. We found fewer documented capture episodes for this type in the sources reviewed (cutoff October 2026). The main candidate is the entrenchment of concentrated family control that H\"ogfeldt describes, which social democratic governments accepted in exchange for investment \citep{hogfeldt2005}. The documented check is that labor's organized power repeatedly reversed advantages that capital held, which is one of the four findings that \citet{largo2026hbs} lists as undermining a strong capture thesis.
+
+\subsection{Islamic states}
+
+Islamic states are polities whose rulers derived legitimacy in substantial part from religious law, and they differ widely among themselves: the early caliphates, the Ottoman Empire, the Safavid and later Iranian states, and modern Saudi Arabia and the Islamic Republic of Iran organized resource command in very different ways. Islam here is a source of political legitimacy in specific historical states, not an essence that determines their economic institutions.
+
+Classical Islamic law supplied several settlement modes at once. The treasury, the bayt al-m\=al, held public revenues under the ruler's control. The obligatory alms tax, zak\=at, assigned a share of certain kinds of wealth to specified categories of recipients. The waqf, a perpetual endowment, dedicated the yield of an asset to purposes fixed by its founder under a trustee, and the qadi courts supervised its administration. Partnership forms, especially the commenda contract known as qir\=ad or mu\d{d}\=araba, organized long-distance trade \citep{udovitch1970,cizakca1996}. Singer describes how endowments financed mosques, schools, hospitals, and public kitchens across Ottoman and wider Islamic societies \citep{singer2008}. Kuran argues that the waqf provided public goods while protecting wealth from expropriation by rulers, and that its rigidity, together with features of Islamic partnership and inheritance law, limited the development of durable commercial organizations \citep{kuran2001,kuran2004,kuran2011}. The thesis is contested. Rubin attributes the divergence between Western Europe and the Middle East less to the content of Islamic law than to the role of religious authorities in legitimating rulers \citep{rubin2017}, and Kuru locates the cause in an alliance between the ulama and the state that took shape in the eleventh century \citep{kuru2019}. These accounts disagree about causes; they agree that the distribution of the financial pillar among rulers, jurists, endowments, and merchants shaped later development.
+
+The Ottoman Empire illustrates a fiscal regime built on command allocation and credit. Karaman and Pamuk show that Ottoman central revenues per capita fell behind those of the leading European states in the seventeenth and eighteenth centuries and that the state relied increasingly on tax farming, including life-term tax farms, which converted future revenues into present credit from local and provincial elites \citep{karaman2010}. In a comparative study they relate the different paths of European and Ottoman fiscal development to the interaction of warfare, economic structure, and political regime \citep{karaman2013}. Pamuk's monetary history records the use of debasement as a revenue source in fiscal crises \citep{pamuk2000}. Tax farming dispersed the collection of revenue among many holders, lowering $H_{\pF}$, while coupling it tightly to local political and coercive power.
+
+Modern Islamic states are mostly rentier states, and their allocation regimes are shaped by oil more than by religious law. Hertog describes the Saudi state as a set of fiefdoms and brokerage networks built around royal patrons, alongside islands of efficient bureaucracy such as the national oil company \citep{hertog2010}. Chaudhry contrasts the institutional erosion that oil wealth produced in Saudi Arabia with the different path of labor-exporting Yemen \citep{chaudhry1997}, and Vitalis reconstructs the corporate and political entanglements of the American oil company in the early Saudi state \citep{vitalis2007}. In the Islamic Republic of Iran, revolutionary foundations known as bonyads control large economic assets outside the ordinary budget, and the Revolutionary Guards developed substantial business interests, including construction and engineering firms \citep{maloney2015,wehrey2009}. That fusion of financial and coercive control is the coupling $C_{\pF\pC}$ in its most direct form; Part V treats the coercive side. El-Gamal argues that much of modern Islamic finance replicates conventional instruments in legally permissible form, so that its religious label says little about how control is distributed \citep{elgamal2006}.
+
+Accountability varied with the type of state. Qadi supervision of endowments, the jurists' claim to interpret the law independently of rulers, and the commercial courts all provided checks in classical and Ottoman settings, although Kuran records that rulers did at times confiscate endowments \citep{kuran2001}. In modern rentier states the rentier argument predicts weak fiscal bargaining because the state does not depend on taxpayers \citep{beblawiluciani1987,ross2001}, but the within-country evidence of Haber and Menaldo cautions against treating oil as a sufficient cause \citep{habermenaldo2011}. Documented capture episodes include the off-budget concentration of assets in Iran's foundations and security forces; documented checks include the juristic independence that endowment supervision required and the variation across Islamic polities that rules out any single Islamic allocation regime.
+
+\subsection{Catholic monarchies of early modern Europe}
+
+In the Catholic monarchies of early modern Europe, royal authority was intertwined with the Church, and the financial pillar was distributed among the crown's fiscal apparatus, private bankers who lent to the crown, the Church with its lands and tithes, and officeholders who had bought their posts. Habsburg Spain, Bourbon France, and the Papal States organized these elements differently, and Gallican and ultramontane traditions disagreed about the Church's relation to royal finance. Catholicism here, like Islam in the preceding subsection, is a source of political legitimacy in specific states, not a determinant of their institutions.
+
+Habsburg Spain under Philip II is the best studied case of sovereign credit in the period. The crown borrowed heavily from Genoese and other bankers through short-term contracts called asientos and long-term bonds called juros, and it suspended payments on several occasions. Drelichman and Voth show that lending nevertheless continued, that the bankers earned positive returns overall, and that the payment stops are better read as excusable defaults in bad fiscal states, followed by negotiated settlements, than as predation \citep{drelichman2011,drelichman2014}. Conklin models the relationship as a repeated game in which the bankers' capacity to act together disciplined the crown \citep{conklin1998}. The coupling $C_{\pF\pC}$ was strong, since the debt financed war, while $C_{\pF\pP}$ ran through the Cortes of Castile, whose consent was needed for important taxes and which therefore constrained the crown's capacity to pledge revenue. \Cref{prop:financial-power:sovereign-credit} in \cref{sec:mechanisms} gives the formal condition.
+
+Bourbon France combined a royal fiscal system with extensive sale of offices and tax farming. Doyle describes venality as the sale of offices that became the heritable property of their holders, so that judges and financial officials owned their posts \citep{doyle1996}. Kwass shows how privilege sorted subjects for taxation and how new direct taxes provoked eighteenth-century disputes over liberty and equality \citep{kwass2000}. Velde and Weir analyze the crown's borrowing through life annuities and other instruments before 1789 \citep{velde1992}, and Hoffman, Postel-Vinay, and Rosenthal reconstruct a large private credit market organized by Parisian notaries \citep{hoffman2000}. The essays collected by Hoffman and Norberg compare how fiscal crises interacted with representative institutions across European states \citep{hoffmannorberg1994}. Venality made the financial pillar less concentrated and less contestable at once: offices were dispersed across many holders, but holders could not be removed except by reimbursement, and the coupling between $\pF$ and $\pJ$ was direct because judicial offices were purchased.
+
+The Papal States and the finances of the papacy give the case of fusion between financial and spiritual authority. Prodi describes the pope as both head of the Church and territorial prince, with a fiscal and administrative apparatus that anticipated features of other early modern states \citep{prodi1987}. De Roover's history of the Medici bank documents its role as depository of the papal Camera \citep{deroover1963}, and Padgett and Ansell show how the Medici built power in Florence through overlapping networks of marriage, business, and patronage \citep{padgett1993}, which is a historical multiplex in exactly the sense of \citet{largo2026hbs}. Ekelund and colleagues interpret the medieval Church as an economic firm that sought rents \citep{ekelund1996}; the interpretation is contested, and we cite it as one reading of the evidence rather than as an established result.
+
+Accountability in these monarchies rested on representative bodies such as the Cortes, on the Parlements' registration and remonstrance of royal edicts (a rule-making veto in Part~II's coding), on the repeated-game discipline that lenders imposed, on ecclesiastical immunities that sometimes protected Church wealth from the crown and sometimes protected the crown's allies, and on conflict between crown and Church. Documented capture episodes include the conversion of financial office into judicial office through venality. Documented checks include the Cortes' control over new taxes in Castile and the bankers' capacity to withhold further credit.
+
+\subsection{Secular democracies}
+
+Secular democracies distribute authority among elected officials, courts, independent agencies, and private institutions, and justify it without reference to religious law. The financial pillar in such polities includes private holders, as in the first and third types, together with public institutions designed to be insulated from the elected government: an independent central bank, a supreme audit institution, competition authorities, and procurement and disclosure regimes. The distinctive feature of the type is constitutional: it separates the holders of different financial subdomains and places some of them beyond the direct reach of elected officials.
+
+Central bank independence is the clearest example of delegated financial authority. Alesina and Summers found that more independent central banks were associated with lower and more stable inflation, without a corresponding cost in real growth \citep{alesina1993}. Goodhart traces the evolution of central banks from government bankers to institutions charged with monetary stability and the supervision of banks \citep{goodhart1988}. Delegation raises contestability against elected officials, who can no longer finance spending by printing money, but it concentrates control of the monetary subdomain in a small technocratic body. Whether delegation reduces unaccountable concentration or relocates it is therefore an empirical question about the review that independent agencies themselves face, through legislative oversight, published reasoning, and judicial review.
+
+Secular democracies also build disclosure and review into the coupling $C_{\pF\pP}$. Lobbying registers, contribution limits, beneficial-ownership registers, and competitive procurement aim to make the wealth-to-rules pathway visible and contestable; \citet{largo2026hbs} lists them among redesign measures. The revolving-door evidence cited above shows that personal connections still carry value \citep{blanes2012,bertrand2014}, and Carpenter and Moss collect designs intended to prevent capture, including procedural requirements, external review, and the deliberate building of countervailing expertise \citep{carpentermoss2014}. Rajan and Zingales show that financial development in many countries reversed between the early twentieth century and the postwar decades, and argue that incumbent firms and financiers oppose financial development when it would admit competitors \citep{rajan2003}. Their result implies that constitutional separation does not by itself prevent incumbents from using political influence to close entry.
+
+Accountability in this type is the highest on paper, because the review of financial decisions is spread across courts, legislatures, auditors, and the press. The documented capture episodes are those of the first type, since most secular democracies are also market economies, and their characteristic form is quiet influence on technical rules. The documented checks are the binding constraints that independent agencies, courts, and elections impose, including judicial invalidation of regulations and the electoral replacement of governments that have favored concentrated interests. Scheve and Stasavage show that democracies do not automatically tax the rich more heavily \citep{scheve2016}, which is a reminder that constitutional design shapes the distribution of financial control without determining it.
+
+\subsection{Summary of the comparison}
+
+\Cref{tab:regimes} collects the comparison. Every row has a financial pillar, which is the necessity claim; the rows differ in who holds it, how it is coupled, and what checks it, which is where the contingent capture claim must be tested.
+
+\begin{table}[t]
+\centering
+\small
+\caption{The financial pillar across the six regime types. Coupling entries are hypotheses about which pairs a preregistered coding would find strongest, not measured values.}
+\label{tab:regimes}
+\begin{tabularx}{\linewidth}{@{}L{2.2cm}YL{2.1cm}Y@{}}
+\toprule
+Regime type & Typical holders of control & Strongest couplings & Main sources of accountability \\
+\midrule
+Market capitalism & Private owners, banks, corporations, and a central bank & $C_{\pF\pP}$, $C_{\pF\pI}$, $C_{\pF\pJ}$ & Open entry, antitrust, disclosure, courts, and elections \\
+Communist party-state & Planners, state banks, and managers appointed by the party & $C_{\pP\pF}$ and $C_{\pF\pC}$ & Mainly the party's own control organs, with informal bargaining \\
+Social democracy & Private owners alongside unions, public funds, and the state budget & $C_{\pF\pW}$ and $C_{\pF\pP}$ & Elections, organized labor, and transparency norms \\
+Islamic states & Treasuries, endowment trustees, merchants, tax farmers, and rentier states & $C_{\pF\pC}$ and $C_{\pF\pI}$ & Qadi supervision and juristic independence, varying widely by state \\
+Catholic monarchies & The crown, its bankers, the Church, and owners of venal offices & $C_{\pF\pC}$ and $C_{\pF\pJ}$ & Representative assemblies, lenders' discipline, and Church-crown conflict \\
+Secular democracies & Private holders with independent central banks, auditors, and regulators & $C_{\pF\pP}$ in quiet, technical domains & Delegated review, courts, legislatures, and the press \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Three results of the comparison bear on the series' thesis. The financial pillar is present in every type and in every case examined, held by institutions that have almost nothing else in common. The control path differs by regime as \citet{largo2026hbs} predicts: wealth to rules in market societies, appointment to allocation in party-states, bargaining between organized interests in social democracies, ruler to rent in rentier states, and lender to ruler in early modern fiscal states. And every type has both documented capture episodes and documented checks, so the type alone does not settle whether a polity's financial pillar is captured. That question requires coding a particular polity in a particular period.
+
+\section{Mechanisms, failure modes and checks}
+\label{sec:mechanisms}
+
+Coordination in the financial pillar becomes capture when three conditions of the capture link hold together \citep{largo2026hbs}: an actor obtains privileged access or discretion over allocation, the privilege weakens the accountability or contestability that would otherwise apply, and material evidence ties the asymmetry to an output such as a rule, a credit decision, a contract, or an exemption. Large holdings, profitable lending, and political donations are not capture by themselves.
+
+\subsection{Conversion of resources into influence}
+
+The central mechanism is conversion: the use of control in the financial pillar to obtain favorable outputs in another pillar. Walzer's tyranny and Bourdieu's convertibility of capital name the same phenomenon \citep{walzer1983,bourdieu1989}.
+
+\begin{definition}[Conversion elasticity]
+\label{def:financial-power:conversion}
+Let $y^{n}_i$ be a measure of outputs of pillar $n\neq\pF$ that favor actor $i$: rules adopted, rulings won, coverage obtained, sanctions avoided, or labor terms secured. The \emph{conversion elasticity} from the financial pillar to pillar $n$ is
+\[
+\varepsilon_{\pF\to n}=\frac{\partial\ln\E[y^{n}_i\mid s^{\pF}_i,X_i]}{\partial\ln s^{\pF}_i},
+\]
+where $X_i$ collects the controls under which the comparison is made, including the actor's preferences and the public salience of the issue. The elasticity is defined where $s^{\pF}_i>0$, the conditional expectation is positive, and it is differentiable in $s^{\pF}_i$.
+\end{definition}
+
+Conversion elasticity and the coupling $C_{\pF n}$ measure different things. The coupling records whether one coalition commands appointments, budgets, sanctions, or agenda in both pillars \citep{largo2026hbs}; the elasticity records whether resource shares buy favorable outputs from actors who may be entirely independent. A wealthy firm lobbying an independent legislature produces positive $\varepsilon_{\pF\to\pP}$ with $C_{\pF\pP}$ near zero. A party-state in which appointment determines credit has high $C_{\pP\pF}$, but the relevant elasticity runs the other way, from appointment rank to allocation, which is the object of hypothesis HF2 in \cref{sec:measurement}. Which direction dominates is the regime-specific control path of \citet{largo2026hbs}.
+
+A deliberately simple decision model gives conditions under which a resource holder invests in conversion.
+
+\begin{proposition}[Influence investment]
+\label{prop:financial-power:influence}
+An actor with financial share $s\in(0,1]$ faces a rule whose adoption is worth $sV$ to it, where $V>0$ is the value of the rule to the whole resource base. By spending $e\geq 0$ the actor makes adoption occur with probability $\pi(e,Q)$, where $Q\in[0,1)$ is the contestability of the receiving pillar and $\pi$ is twice continuously differentiable on $[0,\infty)\times[0,1)$ with $\pi_e>0$, $\pi_{ee}<0$, and $\pi_{eQ}<0$. At $Q=1$ influence has no return and the actor spends nothing. The actor maximizes $sV\pi(e,Q)-e$. If the maximizer $e^*$ is interior, then
+\[
+\frac{\partial e^*}{\partial s}=-\frac{\pi_e}{s\,\pi_{ee}}>0,\qquad
+\frac{\partial e^*}{\partial V}=-\frac{\pi_e}{V\,\pi_{ee}}>0,\qquad
+\frac{\partial e^*}{\partial Q}=-\frac{\pi_{eQ}}{\pi_{ee}}<0.
+\]
+\end{proposition}
+
+\begin{proof}
+An interior maximizer satisfies the first-order condition $sV\pi_e(e^*,Q)=1$, and the second-order condition holds because $sV\pi_{ee}<0$. Write $\Phi(e,s,V,Q)=sV\pi_e(e,Q)-1$. Since $\partial\Phi/\partial e=sV\pi_{ee}\neq 0$, the implicit function theorem gives $e^*$ as a differentiable function of $(s,V,Q)$ near any interior solution, with $\partial e^*/\partial z=-(\partial\Phi/\partial z)/(\partial\Phi/\partial e)$ for each parameter $z$. Here $\partial\Phi/\partial s=V\pi_e$, $\partial\Phi/\partial V=s\pi_e$, and $\partial\Phi/\partial Q=sV\pi_{eQ}$. Substituting gives the three expressions. Their signs follow from $\pi_e>0$, $\pi_{ee}<0$, and $\pi_{eQ}<0$.
+\end{proof}
+
+\begin{example}[A participation threshold]
+\label{ex:threshold}
+Let $\pi(e,Q)=(1-Q)(1-e^{-e})$, which satisfies the conditions of \cref{prop:financial-power:influence} for $Q<1$. The objective $sV(1-Q)(1-e^{-e})-e$ is concave in $e$ with derivative $sV(1-Q)e^{-e}-1$, so the optimum is $e^*=\ln\bigl(sV(1-Q)\bigr)$ when $sV(1-Q)>1$ and $e^*=0$ otherwise. Actors with shares below the threshold $\bar s=1/\bigl(V(1-Q)\bigr)$ do not invest at all. Take ten actors and $V=10$. At $Q=0.5$ and equal shares of $0.1$, every actor has $sV(1-Q)=0.5<1$ and total investment is zero. If one actor's share rises to $0.55$ and the other nine hold $0.05$ each, that actor invests $\ln 2.75\approx 1.01$ and the others still invest nothing. If contestability then rises to $Q=0.9$, the large holder's product falls to $0.55$ and its investment returns to zero.
+\end{example}
+
+The example states three things in miniature. Concentration activates conversion, because only holders above a threshold find influence worth buying; this is Olson's asymmetry between concentrated and diffuse interests \citep{olson1965}. Contestability shuts conversion off by lowering its marginal return, which is the financial form of the source's Proposition 2 that checks can interrupt transmission \citep{largo2026hbs}. And the threshold depends on the stake $V$, so conversion concentrates in domains where rules are worth much to few, which is consistent with Culpepper's finding that business power is strongest in quiet, technical politics \citep{culpepper2010}.
+
+The model has clear limits. It is a single-actor decision problem: other actors' spending does not enter $\pi$, so the competition among groups that Becker emphasizes, and the countermobilization that large transfers provoke, are absent \citep{becker1983}. The sign condition $\pi_{eQ}<0$ is an assumption about how contestability works, not a finding, and it would fail if contestability raised the value of expert lobbying by making the process more procedural. The proposition is therefore a conditional comparative static of the kind \citet{largo2026hbs} uses throughout, and its empirical counterpart is hypothesis HF1.
+
+\subsection{Credit and the discipline of lenders}
+
+Sovereign borrowing is the oldest form of coupling between private finance and political power. It can be read as capture, with lenders controlling the state, or as a bargain, with lenders disciplined by their need for repayment and the ruler by its need for future credit. A standard repeated-game condition separates the two readings.
+
+\begin{proposition}[Sovereign credit]
+\label{prop:financial-power:sovereign-credit}
+A ruler with discount factor $\delta\in(0,1)$ owes a payment $D>0$ in the current period. Continued access to credit yields a net surplus $g>0$ in every future period. Lenders act together, so that a default not excused by an agreed contingency ends all future lending. Then repayment is the ruler's best response if and only if
+\[
+D\leq\frac{\delta g}{1-\delta}.
+\]
+\end{proposition}
+
+\begin{proof}
+Repaying costs $D$ now and preserves the surplus stream, whose present value is $\sum_{t\geq 1}\delta^t g=\delta g/(1-\delta)$. Defaulting saves $D$ and ends the stream. Repayment is a best response exactly when $-D+\delta g/(1-\delta)\geq 0$.
+\end{proof}
+
+The condition explains how early modern lenders protected themselves without controlling legislation. Their security came from the ruler's need for future credit, measured by $g$, and from their own capacity to act together, which made exclusion credible. When a fiscal shock raised $D$ above the bound, a payment stop followed, and a negotiated settlement restored the relationship. Drelichman and Voth read the defaults of Philip II in this way, and Conklin attributes the discipline to the Genoese bankers' ability to coordinate \citep{drelichman2011,conklin1998}. If lenders cannot coordinate, because many small lenders compete to replace any lender who is excluded, the threat of exclusion weakens and the bound no longer protects them. The proposition thus identifies when lending is a bargain rather than capture: lenders receive repayment, not legal privileges unrelated to their loans. That is hypothesis HF3.
+
+North and Weingast argued that the constitutional settlement in seventeenth-century England improved the crown's capacity to borrow by making its commitments credible \citep{northweingast1989}. In the terms of the proposition, a representative assembly that controls taxation can raise the credibility of repayment by shifting authority over $D$ away from the ruler alone. The same logic connects the Cortes of Castile to the Habsburg debt.
+
+\subsection{Soft budgets, rents and fusion}
+
+Three further mechanisms move a financial pillar toward capture. The soft budget constraint arises whenever an allocating authority cannot commit to let loss-making units fail \citep{kornai1986}. Kornai developed the concept for socialist enterprises, where the paternalistic state rescued firms as a matter of course. The analogy with private banks considered too large to fail is plausible, but it extends the concept beyond the evidence that Kornai and \citet{largo2026hbs} cite, and we treat it as a hypothesis rather than a finding. Wherever it holds, rescue expectations transfer resources to units with bargaining power, and the transfer is unreviewable when the rescuing authority is not itself accountable.
+
+Rentier revenue changes the coupling between the financial pillar and the productive pillar. A state that lives on external rents does not depend on taxpayers and therefore need not bargain with them \citep{mahdavy1970,beblawiluciani1987}. Levi's account of quasi-voluntary compliance identifies what is lost: the reciprocal bargain in which rulers provide services and keep promises in exchange for compliance \citep{levi1988}. The rentier mechanism lowers $Q_{\pF}$ by weakening the fiscal voice of producers. Part VI derives the producers' side of the same mechanism (Proposition 6.7 of \citealt{long2026productive}); the allocation side belongs here. The evidence that the mechanism operates is mixed, as \cref{sec:literature} records.
+
+Fusion of the financial and coercive pillars in one organization is the most direct route to high $C_{\pF\pC}$. Part V's second-order enforcement result decomposes what a sanctioner must receive to act (Proposition 3.6 of \citealt{long2026coercive}), and its Corollary 3.7 shows that when sanctions are costly to the sanctioner, the benefit of deterrence is shared across a large collective, and higher-order sanctions are absent, coercion requires that sanctioners be paid or provisioned out of allocated resources or else rewarded by belief. Where those scale conditions hold, fusion places both ends of the dependency in one organization. Business arms of security forces, whether the Revolutionary Guards' firms in Iran \citep{wehrey2009} or the military enterprise of early modern monarchies, give one organization both resources and the means of sanction. The rival explanation is public-goods provision: the same organizations build infrastructure and conduct reconstruction, and their size may reflect capacity rather than capture. Distinguishing the two requires evidence on procurement, competition, and review, not on size.
+
+\subsection{Checks}
+
+The checks that interrupt these mechanisms are specific. Open entry, enforced by antitrust and by competitive procurement, raises the number of actors who can contest a holder's position; Rajan and Zingales show that incumbents oppose it for that reason \citep{rajan2003}. A hard budget constraint, under which failing units actually exit, removes the rents of rescue. Disclosure of contributions, lobbying, and beneficial ownership makes the conversion pathway visible, which is a precondition of contesting it. Independent audit and independent central banking separate the review of financial decisions from those who make them, although independence relocates concentration into the reviewing body. And coordinated lenders, organized labor, and representative assemblies supply countervailing power from within the financial pillar itself. Each check raises $Q_{\pF}$ or lowers a coupling; none lowers the necessity of the pillar, which no check can or should remove.
+
+\section{Measurement and testable hypotheses}
+\label{sec:measurement}
+
+\subsection{Indicators}
+
+Measurement of the financial pillar should proceed subdomain by subdomain, as \cref{prop:financial-power:aggregation-gap} recommends, and should code contestability separately from concentration. \Cref{tab:indicators} lists indicators drawn from sources that already exist. Cross-national governance indicators, such as the Worldwide Governance Indicators and the V-Dem data, supply partial measures of contestability \citep{kaufmann2010,coppedge2011}; they do not measure control shares and should not be used as proxies for them.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Indicators for the financial pillar. Concentration indicators enter $H_{\pF}$ by subdomain; contestability indicators enter $Q_{\pF}$.}
+\label{tab:indicators}
+\begin{tabularx}{\linewidth}{@{}L{2.6cm}YY@{}}
+\toprule
+Construct & Indicators & Main pitfall \\
+\midrule
+Ownership concentration & Asset shares, ownership pyramids, and dual-class control & Ownership understates control where party or family ties matter \\
+Credit concentration & Bank credit shares by lender and by borrower & State and private banks may follow different rules \\
+Budget discretion & Share of spending allocated without formula or tender & Discretion can serve legitimate emergencies \\
+Procurement & Concentration of awards by recipient, and the share awarded without competition & Specialized markets have few qualified suppliers \\
+Contestability & Entry barriers, audit independence, bankruptcy enforcement, and disclosure regimes & Laws on paper may not bind in practice \\
+Conversion & Connected-firm returns, connected lending, and lobbying linked to outcomes & Large firms become connected because they are large \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The capture-link coding of \citet{largo2026hbs} supplies the unit of evidence. A coded link records the actor, the mechanism, the evidence of privileged access, the review that applied, the decision, and the material effect, together with counterevidence. The population of coded events should include all decisions in a preregistered sector, not only scandals, since a sample of scandals selects on the outcome.
+
+\subsection{Hypotheses}
+
+\Cref{tab:hypotheses} states seven hypotheses specific to the financial pillar, each refining one of the source hypotheses H1 to H6 and each with a stated falsifier.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Hypotheses for the financial pillar, each paired with an observation that would falsify it.}
+\label{tab:hypotheses}
+\begin{tabularx}{\linewidth}{@{}L{1.1cm}YY@{}}
+\toprule
+Label & Hypothesis & Falsifier \\
+\midrule
+HF1 & The conversion elasticity $\varepsilon_{\pF\to\pP}$ is higher on technical issues of low salience than on salient ones & Equal or higher elasticity on salient issues, or no elasticity once preferences shared across income groups are controlled \\
+HF2 & In party-state command sectors, the appointment rank of an enterprise head predicts credit and inputs after controlling for profitability and plan targets & Profitability predicts allocation better than rank \\
+HF3 & Where a ruler needs repeated credit, lenders secure repayment without obtaining legal privileges unrelated to their loans & Lenders obtain legal advantages that do not secure repayment \\
+HF4 & Liberalizing entry reduces the rents of connected incumbents & Rents of connected firms persist after entry reform \\
+HF5 & A higher share of non-tax revenue lowers fiscal bargaining with taxpayers and raises discretionary allocation & A null effect in within-country panels \\
+HF6 & Where one organization holds financial and coercive control, financial contestability falls & Fused organizations face the same procurement competition and audit as others \\
+HF7 & Credible bankruptcy of large failing units is associated with lower rents & Rescues are followed by lower, not higher, subsequent rents \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+HF1 refines source hypothesis H1 and follows from \cref{prop:financial-power:influence} together with Culpepper's account of quiet politics \citep{culpepper2010}; the alternative falsifier comes from Branham, Soroka, and Wlezien \citep{branham2017}. HF2 specializes source hypothesis H3. HF3 follows from \cref{prop:financial-power:sovereign-credit} and the Habsburg evidence \citep{drelichman2011}. HF4 tests the argument of Rajan and Zingales \citep{rajan2003} and the evidence on connected lending: Khwaja and Mian find that politically connected firms in Pakistan obtained more credit from government banks and defaulted more often \citep{khwaja2005}, and Fisman finds that the market value of firms connected to Suharto fell when rumors of his ill health spread \citep{fisman2001}. HF5 tests the rentier mechanism against the within-country null of Haber and Menaldo \citep{habermenaldo2011}. HF6 states the fusion mechanism with its public-goods rival. HF7 tests the soft budget constraint.
+
+\subsection{Rival explanations and identification}
+
+Each hypothesis faces four rival explanations that coding must address. Economies of scale and natural monopoly can produce high concentration without any political cause. Public-goods provision can justify discretion and concentration, which is the source's Proposition 4 and hypothesis H6 \citep{largo2026hbs}. Survivorship can reverse the causal arrow, since firms that grow large for economic reasons attract political connections. And preference alignment can make the wealthy appear influential when they merely agree with the majority \citep{branham2017}. The event-study and latent-variable designs specified by \citet{largo2026hbs} address some of these threats, but each requires assumptions, such as parallel trends before a reform and measurement invariance across regimes, that must be tested rather than assumed. Measurement invariance is the most demanding: a control share in a Soviet ministry and a control share in a private bank may not be the same construct, and if invariance fails the comparison must use regime-specific models.
+
+\section{The Revelation reading}
+\label{sec:revelation}
+
+The series takes its name from Revelation 13, and its theological vocabulary is typological. The beast of Revelation 13 and the city of Babylon in chapters 17 and 18 are read as images of a recurring configuration of power that claims ultimate loyalty, not as predictions of a particular future state, person, or technology. This is one of several interpretive traditions. Preterist readings locate the text in its first-century setting and read the beast as Roman imperial power and the imperial cult of the province of Asia \citep{collins1984,kraybill1996}. Typological or idealist readings see Rome as a paradigm of a pattern that recurs \citep{bauckham1993}. Futurist readings identify the beast with a coming ruler or system; the history of such identifications is a history of failures, as McGinn and Fuller document \citep{mcginn1998,fuller1995}, and the series excludes them.
+
+Two passages bear on the financial pillar. The first is Revelation 13:16 and 13:17: ``And he causeth all, both small and great, rich and poor, free and bond, to receive a mark in their right hand, or in their foreheads: And that no man might buy or sell, save he that had the mark, or the name of the beast, or the number of his name.'' The image is economic participation conditioned on allegiance. In the vocabulary of this paper, it describes a financial pillar whose settlement procedure for exchange is gated by a test of loyalty administered by the ideological pillar: the coupling $C_{\pF\pI}$ is complete, and contestability for those who fail the test is zero. Part VI formalizes the same condition from the producers' side as a participation gate, access to exchange conditional on allegiance, and treats the passage as its limiting case (Definition 2.8 and Proposition 6.8 of \citealt{long2026productive}). Kraybill reads the passage against the participation of Asian merchants and artisans in trade guilds whose life was bound up with the imperial cult, so that commerce required at least tacit participation in worship \citep{kraybill1996}.
+
+The second is the lament over Babylon in Revelation 18. The merchants of the earth ``are waxed rich through the abundance of her delicacies'' (18:3), they weep ``for no man buyeth their merchandise any more'' (18:11), and the chapter's list of cargoes ends with ``slaves, and souls of men'' (18:13). Bauckham reads the chapter as an economic critique of Rome's trade empire, in which the wealth of the city depends on the extraction of goods from the provinces and the trade in persons is the last item of the list \citep{bauckham1991}. Koester and Aune give the philological and historical commentary \citep{koester2014,aune1998c}, and Rossing reads the chapter as a choice between two cities, Babylon and the new Jerusalem \citep{rossing1999}. The trade in slaves in 18:13 is literal: it refers to the Roman slave trade, and nothing in this reading equates it with wage labor, taxation, or other forms of economic dependence, which the series distinguishes from chattel slavery.
+
+The typological reading names the condition under which the series' structural claim acquires moral weight. The text does not condemn the existence of buying and selling; it condemns a configuration in which access to exchange depends on allegiance and the city's wealth depends on extraction and the trade in persons. That configuration is Proposition~B, the contingent capture of the financial pillar by a coalition that has also captured belief and coercion, not Proposition~A, the existence of an allocation function. The call of Revelation 18:4, ``Come out of her, my people,'' is in this reading an image of exit, one of the checks that Part VI treats. Wink's theology of the powers draws the same distinction: institutions are necessary to human life, become a system of domination when organized around it, and remain open to transformation \citep{wink1992}. The mapping from text to model is an interpretive claim of this series, offered as an aid to comparison; it is not a settled exegetical result. Collins's argument that Revelation responds to a crisis perceived by its author and audience, rather than to an empirically general persecution \citep{collins1984}, is a reminder that the text's images express a judgment about an order, which a comparative political economy cannot simply import as evidence.
+
+\section{Objections and scope conditions}
+\label{sec:objections}
+
+A pluralist will object that resource control in democracies has no apex: many holders compete, coalitions shift by issue, and resources often lose. The objection is correct about the evidence it cites \citep{baumgartner2009,ansolabehere2003} and does not touch the necessity claim, which concerns the existence of the function, not its concentration. It does bear on the capture claim, which is why that claim is stated as a set of hypotheses with falsifiers rather than as a description.
+
+A Marxian critic will object from the other side that the financial pillar abstracts from class: control of the means of production is a social relation, not a share in an index. The model accommodates the relation, since control shares can be computed over the means of production and the coupling $C_{\pF\pW}$ records employer power over workers, but it does not presuppose that one class holds the pillar in every regime. The party-state cases, where control follows appointment rather than ownership, show why that presupposition would mislead.
+
+A market liberal will object that in a market nobody allocates. The reply in \cref{sec:necessity} applies: allocation by price is a settlement procedure whose control shares follow the distribution of endowments, and property rules are themselves outputs of other pillars. The objection has force against a different claim, that markets concentrate control more than other modes, and that claim is not made here.
+
+A philosopher of science will object that the necessity claim is true by definition. It is not, for two reasons. \Cref{def:financial-power:settlement} excludes unregulated contest, so a collective that resolves conflicts by fighting without shared expectations would lack the pillar; and \cref{ass:hazard} is an empirical assumption that could fail. The falsifier stated in \cref{sec:necessity} is a possible observation. What the claim does not do is explain why any particular institution exists, and \cref{sec:necessity} disclaims that explanation explicitly \citep{elster1983,hempel1959}.
+
+A reader concerned with even-handedness may object that Islamic and Catholic polities appear as types at all. They appear because their rulers drew legitimacy from religious law and religious institutions, which shaped how the financial pillar was organized, and the comparison records the internal diversity of each: the waqf and the tax farm, the Ottoman and the Saudi state, the Habsburg debt and the papal Camera. No claim is made that either religion determines an allocation regime, and the evidence reviewed contradicts any such claim.
+
+The comparative claims carry less weight than the formal ones. They rest on secondary scholarship, none of the six types has been coded under a preregistered protocol, and the coupling entries in \cref{tab:regimes} are hypotheses about what such coding would find.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The financial pillar is necessary in a precise and limited sense. Given that claims on finite resources conflict and that unsettled conflict risks dissolution, a collective without a recognized procedure for settling those claims cannot persist, and in any collective that does persist almost all conflicts are settled by such a procedure. The procedure can be a sharing norm in a foraging camp, a cattle payment arranged by a mediator, a waqf deed, a crown loan, a plan target, or a market price. Its necessity implies nothing about who holds it: control can be as dispersed as the index allows or held by one actor, and it can be fully contestable or not contestable at all.
+
+The comparison of six regime types shows the same function held by institutions that differ almost entirely, with control paths that run from wealth to rules, from appointment to allocation, from rents to rulers, and from lenders to kings. Each type has documented capture episodes and documented checks. Whether a particular financial pillar has been captured is therefore an empirical question about concentration, contestability, and coupling in a given polity and period, and the hypotheses stated here make it answerable. What remains uncertain is the measurement itself: until control shares and couplings are coded under a common protocol, the comparative claims of this paper are well-grounded hypotheses rather than estimates. The ideology that justifies resource command changes from one order to the next. The question of who controls the resources remains, and every order must answer it.
+
+\begin{thebibliography}{99}
+\small
+\raggedright
+
+\bibitem[Alesina and Summers(1993)]{alesina1993}
+Alberto Alesina and Lawrence H. Summers (1993). Central Bank Independence and Macroeconomic Performance: Some Comparative Evidence. \emph{Journal of Money, Credit and Banking} 25(2). doi:10.2307/2077833.
+
+\bibitem[Allen et al.(2005)]{allen2005}
+Franklin Allen, Jun Qian, and Meijun Qian (2005). Law, Finance, and Economic Growth in China. \emph{Journal of Financial Economics} 77(1). doi:10.1016/j.jfineco.2004.06.010.
+
+\bibitem[Ansolabehere et al.(2003)]{ansolabehere2003}
+Stephen Ansolabehere, John M. de Figueiredo, and James M. Snyder (2003). Why Is There So Little Money in U.S. Politics? \emph{Journal of Economic Perspectives} 17(1). doi:10.1257/089533003321164976.
+
+\bibitem[Aune(1998)]{aune1998c}
+David E. Aune (1998). \emph{Revelation 17-22}. Word Biblical Commentary 52C, Thomas Nelson.
+
+\bibitem[Bartels(2008)]{bartels2008}
+Larry M. Bartels (2008). \emph{Unequal Democracy: The Political Economy of the New Gilded Age}. Princeton University Press. doi:10.1515/9781400883363.
+
+\bibitem[Bauckham(1991)]{bauckham1991}
+Richard Bauckham (1991). The Economic Critique of Rome in Revelation 18. In \emph{Images of Empire}, edited by Loveday Alexander, JSOT Press (JSOTSup 122).
+
+\bibitem[Bauckham(1993)]{bauckham1993}
+Richard Bauckham (1993). \emph{The Theology of the Book of Revelation}. Cambridge University Press. doi:10.1017/cbo9780511819858.
+
+\bibitem[Baumgartner et al.(2009)]{baumgartner2009}
+Frank R. Baumgartner, Jeffrey M. Berry, Marie Hojnacki, David C. Kimball, and Beth L. Leech (2009). \emph{Lobbying and Policy Change: Who Wins, Who Loses, and Why}. University of Chicago Press. doi:10.7208/chicago/9780226039466.001.0001.
+
+\bibitem[Beblawi and Luciani(1987)]{beblawiluciani1987}
+Hazem Beblawi and Giacomo Luciani (eds.) (1987). \emph{The Rentier State}. Croom Helm. doi:10.4324/9781315684864.
+
+\bibitem[Becker(1983)]{becker1983}
+Gary S. Becker (1983). A Theory of Competition among Pressure Groups for Political Influence. \emph{The Quarterly Journal of Economics} 98(3). doi:10.2307/1886017.
+
+\bibitem[Berliner(1957)]{berliner1957}
+Joseph S. Berliner (1957). \emph{Factory and Manager in the USSR}. Harvard University Press. doi:10.4159/harvard.9780674188273.
+
+\bibitem[Berman(2006)]{berman2006}
+Sheri Berman (2006). \emph{The Primacy of Politics: Social Democracy and the Making of Europe's Twentieth Century}. Cambridge University Press. doi:10.1017/cbo9780511791109.
+
+\bibitem[Bertrand et al.(2014)]{bertrand2014}
+Marianne Bertrand, Matilde Bombardini, and Francesco Trebbi (2014). Is It Whom You Know or What You Know? An Empirical Assessment of the Lobbying Process. \emph{American Economic Review} 104(12). doi:10.1257/aer.104.12.3885.
+
+\bibitem[Black et al.(2000)]{black2000}
+Bernard Black, Reinier Kraakman, and Anna Tarassova (2000). Russian Privatization and Corporate Governance: What Went Wrong? \emph{Stanford Law Review} 52(6). doi:10.2307/1229501.
+
+\bibitem[Blanes i Vidal et al.(2012)]{blanes2012}
+Jordi Blanes i Vidal, Mirko Draca, and Christian Fons-Rosen (2012). Revolving Door Lobbyists. \emph{American Economic Review} 102(7). doi:10.1257/aer.102.7.3731.
+
+\bibitem[Boehm(1999)]{boehm1999}
+Christopher Boehm (1999). \emph{Hierarchy in the Forest: The Evolution of Egalitarian Behavior}. Harvard University Press. doi:10.2307/j.ctvjf9xr4.
+
+\bibitem[Bourdieu(1989)]{bourdieu1989}
+Pierre Bourdieu (1989). Social Space and Symbolic Power. \emph{Sociological Theory} 7(1). doi:10.2307/202060.
+
+\bibitem[Branham et al.(2017)]{branham2017}
+J. Alexander Branham, Stuart N. Soroka, and Christopher Wlezien (2017). When Do the Rich Win? \emph{Political Science Quarterly} 132(1). doi:10.1002/polq.12577.
+
+\bibitem[Carpenter and Moss(2014)]{carpentermoss2014}
+Daniel Carpenter and David A. Moss (eds.) (2014). \emph{Preventing Regulatory Capture: Special Interest Influence and How to Limit It}. Cambridge University Press. doi:10.1017/CBO9781139565875.
+
+\bibitem[Chaudhry(1997)]{chaudhry1997}
+Kiren Aziz Chaudhry (1997). \emph{The Price of Wealth: Economies and Institutions in the Middle East}. Cornell University Press. doi:10.7591/9781501700347.
+
+\bibitem[\c{C}izak\c{c}a(1996)]{cizakca1996}
+Murat \c{C}izak\c{c}a (1996). \emph{A Comparative Evolution of Business Partnerships: The Islamic World and Europe, with Specific Reference to the Ottoman Archives}. Brill.
+
+\bibitem[Clastres(1987)]{clastres1987}
+Pierre Clastres (1987). \emph{Society against the State: Essays in Political Anthropology (1974), trans. Robert Hurley}. Zone Books. doi:10.2307/j.ctv1595m3p.
+
+\bibitem[Collins(1984)]{collins1984}
+Adela Yarbro Collins (1984). \emph{Crisis and Catharsis: The Power of the Apocalypse}. Westminster Press.
+
+\bibitem[Conklin(1998)]{conklin1998}
+James Conklin (1998). The Theory of Sovereign Debt and Spain under Philip II\@. \emph{Journal of Political Economy} 106(3). doi:10.1086/250019.
+
+\bibitem[Coppedge et al.(2011)]{coppedge2011}
+Michael Coppedge, John Gerring, David Altman, Michael Bernhard, Steven Fish, Allen Hicken, Matthew Kroenig, Staffan I. Lindberg, Kelly McMann, Pamela Paxton, Holli A. Semetko, Svend-Erik Skaaning, Jeffrey Staton, and Jan Teorell (2011). Conceptualizing and Measuring Democracy: A New Approach. \emph{Perspectives on Politics} 9(2). doi:10.1017/S1537592711000880.
+
+\bibitem[Cox et al.(2010)]{cox2010}
+Michael Cox, Gwen Arnold, and Sergio Villamayor Tomas (2010). A Review of Design Principles for Community-based Natural Resource Management. \emph{Ecology and Society} 15(4). doi:10.5751/ES-03704-150438.
+
+\bibitem[Culpepper(2010)]{culpepper2010}
+Pepper D. Culpepper (2010). \emph{Quiet Politics and Business Power: Corporate Control in Europe and Japan}. Cambridge University Press. doi:10.1017/cbo9780511760716.
+
+\bibitem[Dal B\'o(2006)]{dalbo2006}
+Ernesto Dal B\'o (2006). Regulatory Capture: A Review. \emph{Oxford Review of Economic Policy} 22(2). doi:10.1093/oxrep/grj013.
+
+\bibitem[de Roover(1963)]{deroover1963}
+Raymond de Roover (1963). \emph{The Rise and Decline of the Medici Bank, 1397-1494}. Harvard University Press.
+
+\bibitem[Doyle(1996)]{doyle1996}
+William Doyle (1996). \emph{Venality: The Sale of Offices in Eighteenth-Century France}. Oxford University Press. doi:10.1093/acprof:oso/9780198205364.001.0001.
+
+\bibitem[Drelichman and Voth(2011)]{drelichman2011}
+Mauricio Drelichman and Hans-Joachim Voth (2011). Lending to the Borrower from Hell: Debt and Default in the Age of Philip II\@. \emph{The Economic Journal} 121(557). doi:10.1111/j.1468-0297.2011.02442.x.
+
+\bibitem[Drelichman and Voth(2014)]{drelichman2014}
+Mauricio Drelichman and Hans-Joachim Voth (2014). \emph{Lending to the Borrower from Hell: Debt, Taxes, and Default in the Age of Philip II\@}. Princeton University Press.
+
+\bibitem[Ekelund et al.(1996)]{ekelund1996}
+Robert B. Ekelund, Robert F. Hebert, Robert D. Tollison, Gary M. Anderson, and Audrey B. Davidson (1996). \emph{Sacred Trust: The Medieval Church as an Economic Firm}. Oxford University Press.
+
+\bibitem[El-Gamal(2006)]{elgamal2006}
+Mahmoud A. El-Gamal (2006). \emph{Islamic Finance: Law, Economics, and Practice}. Cambridge University Press. doi:10.1017/CBO9780511753756.
+
+\bibitem[Ellickson(1991)]{ellickson1991}
+Robert C. Ellickson (1991). \emph{Order without Law: How Neighbors Settle Disputes}. Harvard University Press. doi:10.4159/9780674036437.
+
+\bibitem[Elster(1983)]{elster1983}
+Jon Elster (1983). \emph{Explaining Technical Change: A Case Study in the Philosophy of Science}. Cambridge University Press.
+
+\bibitem[Esping-Andersen(1985)]{esping1985}
+G\"osta Esping-Andersen (1985). \emph{Politics against Markets: The Social Democratic Road to Power}. Princeton University Press. doi:10.1515/9781400886203.
+
+\bibitem[Evans-Pritchard(1940)]{evanspritchard1940}
+E. E. Evans-Pritchard (1940). \emph{The Nuer: A Description of the Modes of Livelihood and Political Institutions of a Nilotic People}. Clarendon Press.
+
+\bibitem[Faccio(2006)]{faccio2006}
+Mara Faccio (2006). Politically Connected Firms. \emph{American Economic Review} 96(1). doi:10.1257/000282806776157704.
+
+\bibitem[Fisman(2001)]{fisman2001}
+Raymond Fisman (2001). Estimating the Value of Political Connections. \emph{American Economic Review} 91(4). doi:10.1257/aer.91.4.1095.
+
+\bibitem[Fuller(1995)]{fuller1995}
+Robert C. Fuller (1995). \emph{Naming the Antichrist: The History of an American Obsession}. Oxford University Press. doi:10.1093/acprof:oso/9780195109795.001.0001.
+
+\bibitem[Gilens and Page(2014)]{gilens2014}
+Martin Gilens and Benjamin I. Page (2014). Testing Theories of American Politics: Elites, Interest Groups, and Average Citizens. \emph{Perspectives on Politics} 12(3). doi:10.1017/S1537592714001595.
+
+\bibitem[Goodhart(1988)]{goodhart1988}
+Charles A. E. Goodhart (1988). \emph{The Evolution of Central Banks}. MIT Press.
+
+\bibitem[Graeber and Wengrow(2021)]{graeber2021}
+David Graeber and David Wengrow (2021). \emph{The Dawn of Everything: A New History of Humanity}. Farrar, Straus and Giroux.
+
+\bibitem[Gregory(2004)]{gregory2004}
+Paul R. Gregory (2004). \emph{The Political Economy of Stalinism: Evidence from the Soviet Secret Archives}. Cambridge University Press. doi:10.1017/cbo9780511615856.
+
+\bibitem[Grossman and Helpman(1994)]{grossman1994}
+Gene M. Grossman and Elhanan Helpman (1994). Protection for Sale. \emph{American Economic Review} 84(4).
+
+\bibitem[Guriev and Rachinsky(2005)]{guriev2005}
+Sergei Guriev and Andrei Rachinsky (2005). The Role of Oligarchs in Russian Capitalism. \emph{Journal of Economic Perspectives} 19(1). doi:10.1257/0895330053147994.
+
+\bibitem[Haber and Menaldo(2011)]{habermenaldo2011}
+Stephen Haber and Victor Menaldo (2011). Do Natural Resources Fuel Authoritarianism? A Reappraisal of the Resource Curse. \emph{American Political Science Review} 105(1). doi:10.1017/S0003055410000584.
+
+\bibitem[Hacker and Pierson(2010)]{hackerpierson2010}
+Jacob S. Hacker and Paul Pierson (2010). \emph{Winner-Take-All Politics: How Washington Made the Rich Richer and Turned Its Back on the Middle Class}. Simon \& Schuster.
+
+\bibitem[Hall and Deardorff(2006)]{hall2006}
+Richard L. Hall and Alan V. Deardorff (2006). Lobbying as Legislative Subsidy. \emph{American Political Science Review} 100(1). doi:10.1017/s0003055406062010.
+
+\bibitem[Hall and Soskice(2001)]{hallsoskice2001}
+Peter A. Hall and David Soskice (eds.) (2001). \emph{Varieties of Capitalism: The Institutional Foundations of Comparative Advantage}. Oxford University Press. doi:10.1093/0199247757.001.0001.
+
+\bibitem[Hellman(1998)]{hellman1998}
+Joel S. Hellman (1998). Winners Take All: The Politics of Partial Reform in Postcommunist Transitions. \emph{World Politics} 50(2). doi:10.1017/s0043887100008091.
+
+\bibitem[Hellman et al.(2000)]{hellman2000}
+Joel S. Hellman, Geraint Jones, and Daniel Kaufmann (2000). Seize the State, Seize the Day: State Capture, Corruption, and Influence in Transition. World Bank Policy Research Working Paper 2444.
+
+\bibitem[Hempel(1959)]{hempel1959}
+Carl G. Hempel (1959). The Logic of Functional Analysis. In \emph{Symposium on Sociological Theory}, edited by Llewellyn Gross, Harper \& Row.
+
+\bibitem[Hertog(2010)]{hertog2010}
+Steffen Hertog (2010). \emph{Princes, Brokers, and Bureaucrats: Oil and the State in Saudi Arabia}. Cornell University Press. doi:10.7591/9780801458774.
+
+\bibitem[Hirschman(1964)]{hirschman1964}
+Albert O. Hirschman (1964). The Paternity of an Index. \emph{American Economic Review} 54(5).
+
+\bibitem[Hoffman and Norberg(1994)]{hoffmannorberg1994}
+Philip T. Hoffman and Kathryn Norberg (eds.) (1994). \emph{Fiscal Crises, Liberty, and Representative Government, 1450-1789}. Stanford University Press. doi:10.1515/9781503619500.
+
+\bibitem[Hoffman et al.(2000)]{hoffman2000}
+Philip T. Hoffman, Gilles Postel-Vinay, and Jean-Laurent Rosenthal (2000). \emph{Priceless Markets: The Political Economy of Credit in Paris, 1660-1870}. University of Chicago Press.
+
+\bibitem[H\"ogfeldt(2005)]{hogfeldt2005}
+Peter H\"ogfeldt (2005). The History and Politics of Corporate Ownership in Sweden. In \emph{A History of Corporate Governance around the World}, edited by Randall K. Morck, University of Chicago Press / NBER.
+
+\bibitem[Igan et al.(2012)]{igan2012}
+Deniz Igan, Prachi Mishra, and Thierry Tressel (2012). A Fistful of Dollars: Lobbying and the Financial Crisis. \emph{NBER Macroeconomics Annual} 26.
+
+\bibitem[Kalla and Broockman(2016)]{kalla2016}
+Joshua L. Kalla and David E. Broockman (2016). Campaign Contributions Facilitate Access to Congressional Officials: A Randomized Field Experiment. \emph{American Journal of Political Science} 60(3). doi:10.1111/ajps.12180.
+
+\bibitem[Karaman and Pamuk(2010)]{karaman2010}
+K. K{\i}van\c{c} Karaman and \c{S}evket Pamuk (2010). Ottoman State Finances in European Perspective, 1500-1914. \emph{The Journal of Economic History} 70(3). doi:10.1017/s0022050710000550.
+
+\bibitem[Karaman and Pamuk(2013)]{karaman2013}
+K. K{\i}van\c{c} Karaman and \c{S}evket Pamuk (2013). Different Paths to the Modern State in Europe: The Interaction between Warfare, Economic Structure, and Political Regime. \emph{American Political Science Review} 107(3). doi:10.1017/S0003055413000312.
+
+\bibitem[Kaufmann et al.(2010)]{kaufmann2010}
+Daniel Kaufmann, Aart Kraay, and Massimo Mastruzzi (2010). The Worldwide Governance Indicators: Methodology and Analytical Issues. \emph{Hague Journal on the Rule of Law} 3(2). doi:10.1017/S1876404511200046.
+
+\bibitem[Kelly(1995)]{kelly1995}
+Robert L. Kelly (1995). \emph{The Foraging Spectrum: Diversity in Hunter-Gatherer Lifeways}. Smithsonian Institution Press. doi:10.2307/j.ctv2sx9gc9.
+
+\bibitem[Khwaja and Mian(2005)]{khwaja2005}
+Asim Ijaz Khwaja and Atif Mian (2005). Do Lenders Favor Politically Connected Firms? Rent Provision in an Emerging Financial Market. \emph{Quarterly Journal of Economics} 120(4). doi:10.1162/003355305775097524.
+
+\bibitem[Koester(2014)]{koester2014}
+Craig R. Koester (2014). \emph{Revelation: A New Translation with Introduction and Commentary}. Yale University Press (Anchor Yale Bible 38A). doi:10.12987/9780300211030.
+
+\bibitem[Kornai(1986)]{kornai1986}
+J\'anos Kornai (1986). The Soft Budget Constraint. \emph{Kyklos} 39(1). doi:10.1111/j.1467-6435.1986.tb01252.x.
+
+\bibitem[Kornai(1992)]{kornai1992}
+J\'anos Kornai (1992). \emph{The Socialist System: The Political Economy of Communism}. Princeton University Press. doi:10.2307/j.ctv1ddczdr.
+
+\bibitem[Korpi(1983)]{korpi1983}
+Walter Korpi (1983). \emph{The Democratic Class Struggle}. Routledge \& Kegan Paul.
+
+\bibitem[Kraybill(1996)]{kraybill1996}
+J. Nelson Kraybill (1996). \emph{Imperial Cult and Commerce in John's Apocalypse}. Sheffield Academic Press (JSNT Supplement 132).
+
+\bibitem[Krueger(1974)]{krueger1974}
+Anne O. Krueger (1974). The Political Economy of the Rent-Seeking Society. \emph{American Economic Review} 64(3).
+
+\bibitem[Kuran(2001)]{kuran2001}
+Timur Kuran (2001). The Provision of Public Goods under Islamic Law: Origins, Impact, and Limitations of the Waqf System. \emph{Law \& Society Review} 35(4). doi:10.2307/3185418.
+
+\bibitem[Kuran(2004)]{kuran2004}
+Timur Kuran (2004). Why the Middle East Is Economically Underdeveloped: Historical Mechanisms of Institutional Stagnation. \emph{Journal of Economic Perspectives} 18(3). doi:10.1257/0895330042162421.
+
+\bibitem[Kuran(2011)]{kuran2011}
+Timur Kuran (2011). \emph{The Long Divergence: How Islamic Law Held Back the Middle East}. Princeton University Press. doi:10.1515/9781400836017.
+
+\bibitem[Kuru(2019)]{kuru2019}
+Ahmet T. Kuru (2019). \emph{Islam, Authoritarianism, and Underdevelopment: A Global and Historical Comparison}. Cambridge University Press. doi:10.1017/9781108296892.
+
+\bibitem[Kwass(2000)]{kwass2000}
+Michael Kwass (2000). \emph{Privilege and the Politics of Taxation in Eighteenth-Century France}. Cambridge University Press.
+
+\bibitem[La Porta et al.(2002)]{laporta2002}
+Rafael La Porta, Florencio L\'opez-de-Silanes, and Andrei Shleifer (2002). Government Ownership of Banks. \emph{The Journal of Finance} 57(1). doi:10.1111/1540-6261.00422.
+
+\bibitem[Laffont and Tirole(1991)]{laffont1991}
+Jean-Jacques Laffont and Jean Tirole (1991). The Politics of Government Decision-Making: A Theory of Regulatory Capture. \emph{The Quarterly Journal of Economics} 106(4). doi:10.2307/2937958.
+
+\bibitem[Lardy(2014)]{lardy2014}
+Nicholas R. Lardy (2014). \emph{Markets over Mao: The Rise of Private Business in China}. Peterson Institute for International Economics.
+
+\bibitem[Largo(2026)]{largo2026hbs}
+Mateo Largo (2026). The Hierarchy of the Beast System: Institutional Power, Elite Coordination, and Economic Dependency Across Political Regimes. Working paper, 14 October 2026.
+
+\bibitem[Ledeneva(1998)]{ledeneva1998}
+Alena V. Ledeneva (1998). \emph{Russia's Economy of Favours: Blat, Networking and Informal Exchange}. Cambridge University Press.
+
+\bibitem[Lee(1979)]{lee1979}
+Richard B. Lee (1979). \emph{The !Kung San: Men, Women, and Work in a Foraging Society}. Cambridge University Press.
+
+\bibitem[Lee(2013)]{lee2013}
+Richard B. Lee (2013). \emph{The Dobe Ju/'hoansi (4th edition)}. Wadsworth/Cengage Learning.
+
+\bibitem[Levi(1988)]{levi1988}
+Margaret Levi (1988). \emph{Of Rule and Revenue}. University of California Press. doi:10.1525/9780520909540.
+
+\bibitem[Lindblom(1977)]{lindblom1977}
+Charles E. Lindblom (1977). \emph{Politics and Markets: The World's Political-Economic Systems}. Basic Books.
+
+\bibitem[Long(2026a)]{long2026coercive}
+Matthew Long (2026a). Coercive Power and Enforcement. Part V of \emph{The Six Pillars of the Beast System}. Working paper, October 2026.
+
+\bibitem[Long(2026b)]{long2026formalized}
+Matthew Long (2026b). The Formalized State: The Hierarchy of the Beast System. Part VII of \emph{The Six Pillars of the Beast System}. Working paper, in preparation.
+
+\bibitem[Long(2026c)]{long2026ideological}
+Matthew Long (2026c). Ideological Power and Legitimation. Part IV of \emph{The Six Pillars of the Beast System}. Working paper, October 2026.
+
+\bibitem[Long(2026d)]{long2026judicial}
+Matthew Long (2026d). Judicial Power and Legal Interpretation. Part III of \emph{The Six Pillars of the Beast System}. Working paper, October 2026.
+
+\bibitem[Long(2026e)]{long2026political}
+Matthew Long (2026e). Political Power and Rule Making. Part II of \emph{The Six Pillars of the Beast System}. Working paper, October 2026.
+
+\bibitem[Long(2026f)]{long2026productive}
+Matthew Long (2026f). Productive Power and Social Reproduction. Part VI of \emph{The Six Pillars of the Beast System}. Working paper, October 2026.
+
+\bibitem[Mahdavy(1970)]{mahdavy1970}
+Hossein Mahdavy (1970). The Patterns and Problems of Economic Development in Rentier States: The Case of Iran. In \emph{Studies in the Economic History of the Middle East}, edited by M. A. Cook, Oxford University Press.
+
+\bibitem[Maloney(2015)]{maloney2015}
+Suzanne Maloney (2015). \emph{Iran's Political Economy since the Revolution}. Cambridge University Press. doi:10.1017/cbo9781139023276.
+
+\bibitem[Mann(1986)]{mann1986}
+Michael Mann (1986). \emph{The Sources of Social Power, Volume 1: A History of Power from the Beginning to A.D. 1760}. Cambridge University Press. doi:10.1017/CBO9780511570896.
+
+\bibitem[Marshall(1976)]{marshall1976}
+Lorna Marshall (1976). \emph{The !Kung of Nyae Nyae}. Harvard University Press. doi:10.4159/harvard.9780674180574.
+
+\bibitem[McGinn(1998)]{mcginn1998}
+Bernard McGinn (1998). \emph{Antichrist: Two Thousand Years of the Human Fascination with Evil}. Columbia University Press.
+
+\bibitem[Merton(1968)]{merton1968}
+Robert K. Merton (1968). \emph{Social Theory and Social Structure (enlarged edition)}. Free Press.
+
+\bibitem[Mian et al.(2010)]{mian2010}
+Atif Mian, Amir Sufi, and Francesco Trebbi (2010). The Political Economy of the US Mortgage Default Crisis. \emph{American Economic Review} 100(5). doi:10.1257/aer.100.5.1967.
+
+\bibitem[Milhaupt and Zheng(2015)]{milhaupt2015}
+Curtis J. Milhaupt and Wentong Zheng (2015). Beyond Ownership: State Capitalism and the Chinese Firm. \emph{Georgetown Law Journal} 103(3).
+
+\bibitem[Mills(1956)]{mills1956}
+C. Wright Mills (1956). \emph{The Power Elite}. Oxford University Press.
+
+\bibitem[Mizruchi(2013)]{mizruchi2013}
+Mark S. Mizruchi (2013). \emph{The Fracturing of the American Corporate Elite}. Harvard University Press. doi:10.4159/harvard.9780674075368.
+
+\bibitem[Naughton(2007)]{naughton2007}
+Barry Naughton (2007). \emph{The Chinese Economy: Transitions and Growth}. MIT Press.
+
+\bibitem[North and Weingast(1989)]{northweingast1989}
+Douglass C. North and Barry R. Weingast (1989). Constitutions and Commitment: The Evolution of Institutions Governing Public Choice in Seventeenth-Century England. \emph{The Journal of Economic History} 49(4). doi:10.1017/S0022050700009451.
+
+\bibitem[North et al.(2009)]{nww2009}
+Douglass C. North, John Joseph Wallis, and Barry R. Weingast (2009). \emph{Violence and Social Orders: A Conceptual Framework for Interpreting Recorded Human History}. Cambridge University Press. doi:10.1017/CBO9780511575839.
+
+\bibitem[Olson(1965)]{olson1965}
+Mancur Olson (1965). \emph{The Logic of Collective Action: Public Goods and the Theory of Groups}. Harvard University Press. doi:10.4159/9780674041660.
+
+\bibitem[Ostrom(1990)]{ostrom1990}
+Elinor Ostrom (1990). \emph{Governing the Commons: The Evolution of Institutions for Collective Action}. Cambridge University Press. doi:10.1017/CBO9780511807763.
+
+\bibitem[Padgett and Ansell(1993)]{padgett1993}
+John F. Padgett and Christopher K. Ansell (1993). Robust Action and the Rise of the Medici, 1400-1434. \emph{American Journal of Sociology} 98(6). doi:10.1086/230190.
+
+\bibitem[Pamuk(2000)]{pamuk2000}
+\c{S}evket Pamuk (2000). \emph{A Monetary History of the Ottoman Empire}. Cambridge University Press.
+
+\bibitem[Peltzman(1976)]{peltzman1976}
+Sam Peltzman (1976). Toward a More General Theory of Regulation. \emph{The Journal of Law and Economics} 19(2). doi:10.1086/466865.
+
+\bibitem[Piketty(2014)]{piketty2014}
+Thomas Piketty (2014). \emph{Capital in the Twenty-First Century}. Harvard University Press (Belknap). doi:10.4159/9780674982918.
+
+\bibitem[Pontusson(1992)]{pontusson1992}
+Jonas Pontusson (1992). \emph{The Limits of Social Democracy: Investment Politics in Sweden}. Cornell University Press. doi:10.7591/9781501737541.
+
+\bibitem[Posner(1975)]{posner1975}
+Richard A. Posner (1975). The Social Costs of Monopoly and Regulation. \emph{Journal of Political Economy} 83(4). doi:10.1086/260357.
+
+\bibitem[Prodi(1987)]{prodi1987}
+Paolo Prodi (1987). \emph{The Papal Prince: One Body and Two Souls: The Papal Monarchy in Early Modern Europe}. Cambridge University Press.
+
+\bibitem[Przeworski(1985)]{przeworski1985}
+Adam Przeworski (1985). \emph{Capitalism and Social Democracy}. Cambridge University Press. doi:10.1017/cbo9781139171830.
+
+\bibitem[Rajan and Zingales(2003)]{rajan2003}
+Raghuram G. Rajan and Luigi Zingales (2003). The Great Reversals: The Politics of Financial Development in the Twentieth Century. \emph{Journal of Financial Economics} 69(1). doi:10.1016/S0304-405X(03)00125-9.
+
+\bibitem[Ross(2001)]{ross2001}
+Michael L. Ross (2001). Does Oil Hinder Democracy? \emph{World Politics} 53(3). doi:10.1353/wp.2001.0011.
+
+\bibitem[Ross(2012)]{ross2012}
+Michael L. Ross (2012). \emph{The Oil Curse: How Petroleum Wealth Shapes the Development of Nations}. Princeton University Press. doi:10.1515/9781400841929.
+
+\bibitem[Rossing(1999)]{rossing1999}
+Barbara R. Rossing (1999). \emph{The Choice between Two Cities: Whore, Bride, and Empire in the Apocalypse}. Trinity Press International (Harvard Theological Studies 48).
+
+\bibitem[Rubin(2017)]{rubin2017}
+Jared Rubin (2017). \emph{Rulers, Religion, and Riches: Why the West Got Rich and the Middle East Did Not}. Cambridge University Press. doi:10.1017/9781139568272.
+
+\bibitem[Sahlins(1972)]{sahlins1972b}
+Marshall Sahlins (1972). The Original Affluent Society. In \emph{Stone Age Economics}, Aldine-Atherton.
+
+\bibitem[Scheve and Stasavage(2016)]{scheve2016}
+Kenneth Scheve and David Stasavage (2016). \emph{Taxing the Rich: A History of Fiscal Fairness in the United States and Europe}. Princeton University Press. doi:10.1515/9781400880379.
+
+\bibitem[Shleifer and Vishny(1994)]{shleifer1994}
+Andrei Shleifer and Robert W. Vishny (1994). Politicians and Firms. \emph{The Quarterly Journal of Economics} 109(4). doi:10.2307/2118354.
+
+\bibitem[Singer(2008)]{singer2008}
+Amy Singer (2008). \emph{Charity in Islamic Societies}. Cambridge University Press.
+
+\bibitem[Stigler(1971)]{stigler1971}
+George J. Stigler (1971). The Theory of Economic Regulation. \emph{The Bell Journal of Economics and Management Science} 2(1). doi:10.2307/3003160.
+
+\bibitem[Streeck(2014)]{streeck2014}
+Wolfgang Streeck (2014). \emph{Buying Time: The Delayed Crisis of Democratic Capitalism}. Verso.
+
+\bibitem[Tilly(1990)]{tilly1990}
+Charles Tilly (1990). \emph{Coercion, Capital, and European States, AD 990-1990}. Blackwell.
+
+\bibitem[Treisman(2010)]{treisman2010}
+Daniel Treisman (2010). ``Loans for Shares'' Revisited. \emph{Post-Soviet Affairs} 26(3). doi:10.2747/1060-586X.26.3.207.
+
+\bibitem[Tullock(1967)]{tullock1967}
+Gordon Tullock (1967). The Welfare Costs of Tariffs, Monopolies, and Theft. \emph{Western Economic Journal} 5(3). doi:10.1111/j.1465-7295.1967.tb01923.x.
+
+\bibitem[Udovitch(1970)]{udovitch1970}
+Abraham L. Udovitch (1970). \emph{Partnership and Profit in Medieval Islam}. Princeton University Press. doi:10.1515/9781400820474.
+
+\bibitem[Velde and Weir(1992)]{velde1992}
+Fran\c{c}ois R. Velde and David R. Weir (1992). The Financial Market and Government Debt Policy in France, 1746-1793. \emph{The Journal of Economic History} 52(1). doi:10.1017/s002205070001024x.
+
+\bibitem[Vitalis(2007)]{vitalis2007}
+Robert Vitalis (2007). \emph{America's Kingdom: Mythmaking on the Saudi Oil Frontier}. Stanford University Press. doi:10.1515/9781503626119.
+
+\bibitem[Walter and Howie(2011)]{walterhowie2011}
+Carl E. Walter and Fraser J. T. Howie (2011). \emph{Red Capitalism: The Fragile Financial Foundation of China's Extraordinary Rise}. Wiley. doi:10.1002/9781119199083.
+
+\bibitem[Walzer(1983)]{walzer1983}
+Michael Walzer (1983). \emph{Spheres of Justice: A Defense of Pluralism and Equality}. Basic Books.
+
+\bibitem[Wehrey et al.(2009)]{wehrey2009}
+Frederic Wehrey, Jerrold D. Green, Brian Nichiporuk, Alireza Nader, Lydia Hansell, Rasool Nafisi, and S. R. Bohandy (2009). The Rise of the Pasdaran: Assessing the Domestic Roles of Iran's Islamic Revolutionary Guards Corps. RAND Corporation, MG-821-OSD.
+
+\bibitem[Wiessner(2005)]{wiessner2005}
+Polly Wiessner (2005). Norm Enforcement among the Ju/'hoansi Bushmen: A Case of Strong Reciprocity? \emph{Human Nature} 16(2). doi:10.1007/s12110-005-1000-9.
+
+\bibitem[Wink(1992)]{wink1992}
+Walter Wink (1992). \emph{Engaging the Powers: Discernment and Resistance in a World of Domination}. Fortress Press. doi:10.2307/j.ctt1tm7j16.
+
+\bibitem[Winters(2011)]{winters2011}
+Jeffrey A. Winters (2011). \emph{Oligarchy}. Cambridge University Press. doi:10.1017/cbo9780511793806.
+
+\bibitem[Woodburn(1982)]{woodburn1982}
+James Woodburn (1982). Egalitarian Societies. \emph{Man (N.S.)} 17(3). doi:10.2307/2801707.
+
+\end{thebibliography}
+
+\end{document}

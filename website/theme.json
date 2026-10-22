@@ -1,0 +1,31 @@
+{
+  "name": "Obsidian and crimson",
+  "domain": "Political economy and formal institutional theory",
+  "fonts": { "display": "Cormorant Garamond", "body": "Inter" },
+  "colors": {
+    "--bg": "#0b0a0e",
+    "--surface": "#14121a",
+    "--surface-hover": "#1c1923",
+    "--accent": "#ec5a72",
+    "--accent-hover": "#ff7a90",
+    "--accent-strong": "#b81f38",
+    "--accent-glow": "rgba(236, 90, 114, 0.14)",
+    "--accent-secondary": "#d9b25f",
+    "--text": "#ece6dc",
+    "--text-muted": "#b5ada1",
+    "--text-dim": "#8d867b",
+    "--border": "#2b2733",
+    "--code-bg": "#100e15",
+    "--success": "#4fb286",
+    "--warning": "#e8793a"
+  },
+  "pillars": {
+    "F": { "name": "Financial", "color": "#d9b25f" },
+    "P": { "name": "Political", "color": "#e0556a" },
+    "J": { "name": "Judicial", "color": "#6f8fe0" },
+    "I": { "name": "Ideological", "color": "#b072d8" },
+    "C": { "name": "Coercive", "color": "#e8793a" },
+    "W": { "name": "Productive", "color": "#4fb286" },
+    "VII": { "name": "Formalized State", "color": "#ece6dc" }
+  }
+}

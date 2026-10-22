@@ -1,0 +1,34 @@
+.DS_Store
+# LaTeX aux files
+*.aux
+*.log
+*.toc
+*.out
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+# Website build output
+website/node_modules/
+website/.next/
+website/out/
+website/.vercel/
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+model/.venv/
+# Reviewer mutex (mkdir-based lock, see Tool Resolution)
+.review.lock/
+# Source preprints are not redistributable — link them from sources/README.md instead
+sources/*.pdf
+sources/*.txt
+
+# Intermediate builds
+papers/latex/*.pdf
+docs/.build/
+.DS_Store
